@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "house-points-dashboard",
+  "private_key_id": "936bd31e4d87a36564667b4b89a2d4feab63cfc5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDVgRKUJMxfrvDL\n20jZ+WKxHNuyzxOGspCsiCAL+BYR0OLrwN+ftYsxOJyBaGHhfq4n6oxbFuv4FEPc\n6Tu6scJlM6BnIkjVb2T/wx3OCiMMEHfXTE9UU3Pr7iWcKHctwya8KBcT5AkHTxYK\nX7guFE6Fu2lrUhHZvVP5pPFR5o/emRuCNhYJJsFl2DEPkU/Wcqi68IFf27Z/vwNv\nUZTJnAAmzruy2M3Puy659DJwg1blKD55EzDXaEDrnUGZUXOEHq54v4+qvpzuMVkj\nqB8U8/xZ8aSIqb4dWXmZImYb2uXLTsOQiHn/rh2fLv0cANoGGljfWoR1o2Y5c680\nHK/ankFJAgMBAAECggEATS9C1Kyy99pqMgB+B1M5gxcQM8XZ5MW0OLNjhoAzFlDC\nYIFTNs0uW2aAaeYfEKK3+jU4dYvFVeOZnwjwb29o/CYcVHyYARUq2a2jnkOa5Pcl\nI//x4+XhkAcBsMEOSMx2uenyYd38B5jnOmvdTUdJFd6pX0OFsYZZD/S5yyaDl3Bw\nI9S+WX/hqt1uyijmy/z72ndiLGfqxIjN9J51yVU9L2cSXHFHBcBuDoQvXh44B6j+\nXicrtTeuo7VI6DyfNBqKIhEd5oplbI1OuA5LvyEmpUlxZ6NWdiwrIpVW6bQwMIlm\nF1vhGxGRGRlHx3StpFfZKARQXDtas8gn2bROXGW4kwKBgQD4Ged4gwBjMJku7YvM\nCjYUGJEirN/Hcl/Di/B212K8ZGCwskg7iZ8mej0+sCQI/beiaiv4DJMHIxU55svC\ncZr2CTpSQ4p7794h32viNJRBgqCBtofnZsWPqQN1CiJ8yUwL4f3ymWPoCEL+H/hV\n8f1A3uu7e/z5OAZ9vQnneAQEWwKBgQDcTTFkFjvFZ6gBWpsXJJC7hFkV0iwNbmrX\n8wVKcaBd6ASevuUrm9v+D2yMqBpjQvxjuseWA7vZ+cKf+pjuSqe9+59Hz+mnsiWE\nphdy08EzIpAQGaCAIbsKi4lRaDbR/kVmXBqYAfDkfA/KDZpTC3V3/ud2lfRXlp//\nVhr0w9NyKwKBgQC1r3qj9QM+oCM9i3XZqQyrMMZwJzsFOsvITt18mgRTRArOuvBM\nsV6b9d6N3r202+Azjx692q99BYMQ0OQcc8dwL5fHEHEEi8cW9R9zGuALDVbvRrVF\njyxUJQhEGHTi/yKyfP/UPeI81HgC03Svs7OrYtQsiwLZmt6eC+aJ3IjMiwKBgQDR\nZnZqIlASJaMmFk+QwerosrZS7YF+CtR4C8Gdrz+1wxKRKfZ/axjC9zpAwJDEhSmO\nSj3oNAhc+vCqS/MNndyv0vrlsZTxF35eBdoIBYuA5Xt2MkXDRUyai2OtA5gIJt8k\nmquUjVPCesIvVpq4EQ5JTvwIViT5FG1ksR3SRkk4HQKBgC/sLRPdDOxGZdDoOJ9f\nuepeVJA58adLAmdPwXo7XDFU1XKUJ/EpHKHw9PKoQOFvuM3VeRyJIdiUz3oUDbux\nolxjNzicWoYXGpxwLG1xqpkB/dpN03FvQU1skunD1D7XQtddkSV8J7mK2WcrQmhn\nPBLpgnExaGHHVDKGZvK1bDKi\n-----END PRIVATE KEY-----\n",
+  "client_email": "house-dashboard-service@house-points-dashboard.iam.gserviceaccount.com",
+  "client_id": "115448953913441191732",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/house-dashboard-service%40house-points-dashboard.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
