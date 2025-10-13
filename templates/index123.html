@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sports Day House Points</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { margin: 0; font-family: system-ui, Arial, sans-serif; background:#f7f7f7; }
+    header { background:#1f2937; color:white; padding:16px 24px; font-size:20px; font-weight:700; }
+    .wrap { padding: 16px 24px; height: calc(100vh - 64px); }
+    /* Give the chart room to render (maintainAspectRatio: false) */
+    #chartWrap { height: 520px; background:white; border-radius:10px; padding:16px; box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+    footer { text-align:center; color:#333; margin-top:10px; font-size:14px; }
+  </style>
+</head>
+<body>
+  <header>Sports Day House Points</header>
+  <div class="wrap">
+    <div id="chartWrap">
+      <canvas id="housePointsChart"></canvas>
+    </div>
+    <footer>Legend: colored = earned (after losses), black = lost</footer>
+  </div>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+  <!-- Your chart code -->
+  <script type="module" src="/static/logic.js?v=3"></script>
+
+</body>
+</html>
