@@ -1,13 +1,10 @@
-(async function init() {
-  const ctx = document.getElementById('housePointsChart').getContext('2d');
+window.addEventListener("DOMContentLoaded", () => {
+  const ctx = document.getElementById('housePointsChart')?.getContext('2d');
 
-  // Fetch data from app.py
+  // Fetch data from data.json
   let houses = [], totalPoints = [], lostPoints = [], links = {};
   try {
-    const res = await fetch("/api/house-points");
-    if (!res.ok) throw new Error(`API ${res.status}`);
-    const d = await res.json();
-
+    const d = DATA;
     houses      = d.houses || [];
     totalPoints = (d.totalPoints || []).map(n => Number(n) || 0);
     lostPoints  = (d.lostPoints  || []).map(n => Number(n) || 0);
@@ -101,16 +98,15 @@
     },
     plugins: [ChartDataLabels]
   });
+});
 
-  // Ghost label (total points)
-  /* const ghostLbl = document.createElement('div');
-  ghostLbl.className = `ghost-label ${d.color}`;
-  ghostLbl.textContent = `Total: ${d.total}`;
-  ghostLbl.style.position = 'absolute';
-  ghostLbl.style.bottom = (Math.min(Math.max(yTotal, minY), maxY) + flagH/2 + 4) + 'px';
-  ghostLbl.style.left = '50%';
-  ghostLbl.style.transform = 'translateX(-50%)';
-  col.appendChild(ghostLbl);
-  */
-
-})();
+// Ghost label (total points)
+/* const ghostLbl = document.createElement('div');
+ghostLbl.className = `ghost-label ${d.color}`;
+ghostLbl.textContent = `Total: ${d.total}`;
+ghostLbl.style.position = 'absolute';
+ghostLbl.style.bottom = (Math.min(Math.max(yTotal, minY), maxY) + flagH/2 + 4) + 'px';
+ghostLbl.style.left = '50%';
+ghostLbl.style.transform = 'translateX(-50%)';
+col.appendChild(ghostLbl);
+*/

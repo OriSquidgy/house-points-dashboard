@@ -1,7 +1,17 @@
-async function loadFlags() {
+window.addEventListener("DOMContentLoaded", () => {
+  const palette = { Joy: 'DC2626', Peace: '1E3A8A', Faith: 'FACC15', Hope: '16A34A' };
 
-  const res = await fetch("/api/points/flag");
-  const data = await res.json();
+  const data = (DATA.houses).map((h, i) => {
+    const total = Number(DATA.totalPoints[i]);
+    const lost = Number(DATA.lostPoints[i]);
+    return {
+      house: h,
+      points: total - lost,
+      total: total,
+      color: palette[h],
+      link: DATA.links[h]
+    };
+  });
 
   data.sort((a, b) => b.points - a.points);
 
@@ -56,7 +66,5 @@ async function loadFlags() {
     `;
     
     col.appendChild(groundLbl);
-  });
-}
-
-loadFlags();
+});
+})
