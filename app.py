@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Connect to Google Sheets
 scope = ["https://spreadsheets.google.com/feeds",
          "https://www.googleapis.com/auth/drive"]
-client = gspread.service_account(filename="house-points-dashboard-fd15008cbc63.json")
+client = gspread.service_account(filename="service_account_key.json")
 
 SHEET = client.open("House Dashboard Test Data")
 houses_sheet = SHEET.worksheet("Houses")
