@@ -1,5 +1,10 @@
+@echo off
+:: Update data.js
 python appV2.py
+:: Prepares commit
 git add data.js
-for /f "tokens=1-3 delims=/ " %%a in ("%date%") do (set datestr=%%a-%%b-%%c)
+:: Get date for commit 
+for /f "tokens=2-3 delims=/ " %%a in ("%date%") do (set datestr=%%a/%%b)
+:: Commit + push data.js
 git commit -m "Update data %datestr%"
 git push
