@@ -31,12 +31,12 @@ with open("data.js", "w", encoding="utf-8") as file:
 
 events = events_sheet.get_all_records()
 dates = [event["Date"] for event in events]
-events = [event["Event"] for event in events]
+names = [event["Event"] for event in events]
 houses = [event["House"] for event in events]
 points = [event["Points"] for event in events]
 event_data = {
     "dates": dates,
-    "events": events,
+    "events": names,
     "houses": houses,
     "points": points
 }
