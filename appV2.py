@@ -34,11 +34,13 @@ dates = [event["Date"] for event in events]
 names = [event["Event"] for event in events]
 houses = [event["House"] for event in events]
 points = [event["Points"] for event in events]
+places = [event["Place"] for event in events]
 event_data = {
     "dates": dates,
     "events": names,
     "houses": houses,
-    "points": points
+    "points": points,
+    "places": places
 }
 with open("events.js", "w", encoding="utf-8") as file:
     file.write("window.EVENTS = ")
