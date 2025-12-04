@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sports Day House Points</title>
+
+  <!-- Font that matches reference -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">Sports Day House Points</div>
+  </header>
+
+  <main id="main">
+    <div id="chart-container">
+      <canvas id="housePointsChart" role="img" aria-label="Sports Day House Points"></canvas>
+    </div>
+
+    <!-- Buttons hidden -->
+    <div id="bottom-controls" class="bottom-controls" style="display:none;">
+      <button id="btnToggleEarned" class="ctl active" title="Toggle gained points">Gained</button>
+      <button id="btnToggleLost" class="ctl active" title="Toggle lost points">Lost</button>
+    </div>
+
+    <div class="legend-space" aria-hidden="true"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="logic.js"></script>
+  <div id="secret-button">
+    <button onclick="window.location.href='index2.html'">
+      Shhh. secret dont press me
+    </button>
+  </div>
+</body>
+</html>
+

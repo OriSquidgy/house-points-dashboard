@@ -1,112 +1,241 @@
-window.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.getElementById('housePointsChart')?.getContext('2d');
+// logic.js - full chart logic with clickable bars (navigate to house pages)
+// and earned numbers shifted slightly left inside the coloured segment.
+// Keeps bottom toggles for Earned/Lost visibility.
 
-  // Fetch data from data.json
-  let houses = [], totalPoints = [], lostPoints = [], links = {};
-  try {
-    const d = DATA;
-    houses      = d.houses || [];
-    totalPoints = (d.totalPoints || []).map(n => Number(n) || 0);
-    lostPoints  = (d.lostPoints  || []).map(n => Number(n) || 0);
-    links       = d.links || {};
-  } catch (err) {
-    console.error("Error fetching house points:", err);
-    return;
+// Example DATA (replace or set window.DATA before this script runs)
+const DATA = window.DATA || {
+  houses: ['Peace','Joy','Hope','Faith'],
+  totalPoints: [2000, 1700, 1517, 1900],
+  lostPoints: [17, 57, 7, 5],
+  // links not used directly; we map house -> page below
+  links: {}
+};
+
+Chart.register(ChartDataLabels);
+
+window.addEventListener('DOMContentLoaded', () => {
+  // hook bottom buttons if present
+  const btnEarned = document.getElementById('btnToggleEarned');
+  const btnLost = document.getElementById('btnToggleLost');
+
+  let showEarned = true;
+  let showLost = true;
+
+  function updateButtonUI() {
+    if (btnEarned) btnEarned.classList.toggle('active', showEarned);
+    if (btnLost) btnLost.classList.toggle('active', showLost);
   }
 
-  const earnedPoints = totalPoints.map((t, i) => t - lostPoints[i]);
+  btnEarned?.addEventListener('click', () => {
+    showEarned = !showEarned;
+    updateButtonUI();
+    if (window._houseChart) {
+      window._houseChart.getDatasetMeta(0).hidden = !showEarned;
+      window._houseChart.update();
+    }
+  });
 
-  //  Sort houses by earned points (descending)
-  const palette = {Peace: "#1E3A8A", Joy: "#DC2626", Faith: "#FACC15", Hope: "#16A34A"};
-  const sortedData = houses.map((h, i) => ({
+  btnLost?.addEventListener('click', () => {
+    showLost = !showLost;
+    updateButtonUI();
+    if (window._houseChart) {
+      window._houseChart.getDatasetMeta(1).hidden = !showLost;
+      window._houseChart.update();
+    }
+  });
+
+  updateButtonUI();
+  // tiny delay to allow CSS sizing
+  setTimeout(drawChart, 20);
+});
+
+function drawChart() {
+  const canvas = document.getElementById('housePointsChart');
+  if (!canvas) { console.error('Canvas not found'); return; }
+  const ctx = canvas.getContext('2d');
+  if (!ctx) { console.error('2D context not available'); return; }
+
+  // destroy previous instance if present
+  if (window._houseChart && typeof window._houseChart.destroy === 'function') {
+    window._houseChart.destroy();
+    window._houseChart = null;
+  }
+
+  // prepare data
+  const d = DATA;
+  const houses = Array.isArray(d.houses) ? d.houses.slice() : [];
+  const total = (d.totalPoints || []).map(n => Number(n) || 0);
+  const lost = (d.lostPoints || []).map(n => Number(n) || 0);
+
+  const earned = total.map((t, i) => t - (lost[i] || 0));
+
+  // colour palette tuned to reference
+  const palette = {
+    Peace: '#1E3A8A', // blue
+    Joy:   '#D32F2F', // red
+    Hope:  '#16A34A', // green
+    Faith: '#F5C400'  // yellow
+  };
+
+  // map houses to pages (click targets)
+  const pageMap = {
+    Peace: 'peace.html',
+    Joy:   'joy.html',
+    Hope:  'hope.html',
+    Faith: 'faith.html'
+  };
+
+  // build sorted data (largest earned at top)
+  const sorted = houses.map((h, i) => ({
     house: h,
-    earned: earnedPoints[i],
-    lost:   lostPoints[i],
-    total:  totalPoints[i],
-    link:   links[h],
-    color:  palette[h] || "#888888"
-  })).sort((a,b) => b.earned - a.earned);
+    earned: earned[i] || 0,
+    lost: lost[i] || 0,
+    color: palette[h] || '#888',
+    link: pageMap[h] || '#'
+  })).sort((a, b) => b.earned - a.earned);
 
-  // Extract sorted arrays
-  const sortedHouses = sortedData.map(d => d.house);
-  const sortedEarned = sortedData.map(d => d.earned);
-  const sortedLost = sortedData.map(d => d.lost);
-  const sortedColors = sortedData.map(d => d.color);
-  const sortedLinks = Object.fromEntries(sortedData.map(d => [d.house, d.link]));
+  const labels = sorted.map(s => s.house);
+  const earnedData = sorted.map(s => s.earned);
+  const lostData = sorted.map(s => s.lost);
+  const colors = sorted.map(s => s.color);
+  const linkMap = Object.fromEntries(sorted.map(s => [s.house, s.link]));
 
-  const chart = new Chart(ctx, {
+  // padded max so black block never flushes to viewport edge
+  const rawMax = Math.max(...earnedData.map((v, i) => v + (lostData[i] || 0)));
+  const maxWithPadding = Math.ceil(rawMax * 1.06);
+
+  // compute maximum font size such that text fits inside the coloured segment width
+  function computeMaxFontForSegment(chart, index, text, maxSize, minSize = 10, paddingPx = 12) {
+    const xScale = chart.scales.x;
+    const earnedVal = chart.data.datasets[0].data[index] || 0;
+    const startPx = xScale.getPixelForValue(0);
+    const endPx = xScale.getPixelForValue(earnedVal);
+    const segWidth = Math.abs(endPx - startPx);
+
+    const ctx = chart.ctx;
+    for (let s = maxSize; s >= minSize; s--) {
+      ctx.save();
+      ctx.font = `900 ${s}px Montserrat, sans-serif`;
+      const tw = ctx.measureText(String(text)).width;
+      ctx.restore();
+      if (tw + paddingPx * 2 <= segWidth) return s;
+    }
+    return minSize;
+  }
+
+  // Create chart
+  window._houseChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: sortedHouses,
+      labels,
       datasets: [
+        // Earned - coloured bars
         {
-          label: 'House Points (after losses)',
-          data: sortedEarned,
-          backgroundColor: sortedColors,
-          borderRadius: 8,
+          label: 'House Points (after losses) \n (click to view events)',
+          data: earnedData,
+          backgroundColor: colors,
+          borderRadius: 14,
           datalabels: {
+            clip: false,                 // draw on top
             color: '#ffffff',
-            anchor: 'end',
-            align: 'left',   // inside bar
-            offset: -10,     // small padding so it doesn’t touch black bar
+            anchor: 'center',            // vertically centered inside segment
+            align: 'right',              // place near end of coloured segment
+            offset: -8,                  // shift slightly left inside the coloured segment
             clamp: true,
-            font: ctx => {
-              const barHeight = ctx.chart.scales.y.getPixelForTick(1) - ctx.chart.scales.y.getPixelForTick(0);
-              return {
-                weight: '900',
-                size: Math.floor(barHeight * 0.6)
-              };
+            formatter: v => v,
+            // compute whether label should be displayed and the font size that fits
+            display: function(context) {
+              try {
+                const chart = context.chart;
+                const idx = context.dataIndex;
+                const txt = context.dataset.data[idx];
+                const h = chart.canvas.clientHeight || 700;
+                const upper = Math.max(20, Math.floor(h * 0.08)); // upper bound on font
+                const chosen = computeMaxFontForSegment(chart, idx, txt, upper, 10, 10);
+                // cache chosen size
+                context.dataset._computedFontSizes = context.dataset._computedFontSizes || {};
+                context.dataset._computedFontSizes[idx] = chosen;
+                return chosen >= 10;
+              } catch (e) {
+                return true;
+              }
             },
-            formatter: (value) => value
+            font: function(context) {
+              const ds = context.dataset;
+              const idx = context.dataIndex;
+              const computed = ds._computedFontSizes && ds._computedFontSizes[idx];
+              if (computed) return { weight: '900', size: computed };
+              const h = context.chart.canvas.clientHeight || 700;
+              return { weight: '900', size: Math.max(20, Math.floor(h * 0.06)) };
+            }
           }
         },
+
+        // Lost - black blocks (no internal label by default)
         {
           label: 'Lost Points',
-          data: sortedLost,
-          backgroundColor: "#000000",
-          borderRadius: 8,
+          data: lostData,
+          backgroundColor: '#000000',
+          borderRadius: 14,
           datalabels: { display: false }
         }
       ]
     },
+
     options: {
       indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
+      devicePixelRatio: window.devicePixelRatio || 1,
+      animation: false,
+      layout: { padding: { left: 24, right: 96, top: 12, bottom: 12 } },
+
       plugins: {
-        legend: { 
+        legend: {
           display: true,
           position: 'bottom',
-          labels: {
-            font: { size: 16, weight: 'bold' },
-            color: '#333'
-          }
+          labels: { font: { size: 16, weight: '700' }, boxWidth: 18, boxHeight: 12 },
+          align: 'center'
         },
-        title: { display: false }
+        datalabels: { display: true },
+        tooltip: { enabled: true, padding: 12, bodyFont: { size: 14, weight: '600' } }
       },
-      scales: {
-        x: { stacked: true, beginAtZero: true },
-        y: { stacked: true }
-      },
-      onClick: (event, elements) => {
-        if (elements.length > 0) {
-          const index = elements[0].index;
-          const house = sortedHouses[index];
-          window.location.href = sortedLinks[house];
-        }
-      }
-    },
-    plugins: [ChartDataLabels]
-  });
-});
 
-// Ghost label (total points)
-/* const ghostLbl = document.createElement('div');
-ghostLbl.className = `ghost-label ${d.color}`;
-ghostLbl.textContent = `Total: ${d.total}`;
-ghostLbl.style.position = 'absolute';
-ghostLbl.style.bottom = (Math.min(Math.max(yTotal, minY), maxY) + flagH/2 + 4) + 'px';
-ghostLbl.style.left = '50%';
-ghostLbl.style.transform = 'translateX(-50%)';
-col.appendChild(ghostLbl);
-*/
+      scales: {
+        x: {
+          stacked: true,
+          beginAtZero: true,
+          max: maxWithPadding,
+          ticks: { font: { size: 14 }, color: '#333', precision: 0 },
+          grid: { color: 'rgba(0,0,0,0.06)' }
+        },
+        y: {
+          stacked: true,
+          ticks: { font: { size: 20, weight: '700' }, color: '#6b6b6b', padding: 12 },
+          grid: { display: false }
+        }
+      },
+
+      // click anywhere on a bar to navigate to the mapped page
+      onClick: (evt, elements) => {
+        if (!elements || elements.length === 0) return;
+        const idx = elements[0].index;
+        const house = labels[idx];
+        const target = linkMap[house] || pageMap[house] || null;
+        if (target) window.location.href = target;
+      },
+
+      onResize: (chart) => {
+        // clear cached computed font sizes so they'll be recalculated on redraw
+        chart.data.datasets.forEach(ds => { if (ds._computedFontSizes) ds._computedFontSizes = {}; });
+        chart.update();
+      }
+    }
+  });
+
+  // Ensure toggles reflect dataset visibility initially
+  const btnEarned = document.getElementById('btnToggleEarned');
+  const btnLost = document.getElementById('btnToggleLost');
+  if (btnEarned) btnEarned.classList.toggle('active', !window._houseChart.getDatasetMeta(0).hidden);
+  if (btnLost) btnLost.classList.toggle('active', !window._houseChart.getDatasetMeta(1).hidden);
+}

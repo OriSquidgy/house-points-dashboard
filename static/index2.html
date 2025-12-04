@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sports Day House Flags</title>
+  <link rel="stylesheet" href="styles/style2.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="title">Sports Day House Points</div>
+    <a class="btn-link" href="index.html"><button class="switch-btn" type="button">Bar View</button></a>
+  </header>
+
+  <main class="wrap">
+    <section class="scene" role="region" aria-label="House flags">
+      <div id="row" class="row" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- data.js should define a global `DATA` object with:
+       DATA.houses (array), DATA.totalPoints (array), DATA.lostPoints (array), DATA.links (object)
+       Make sure data.js is loaded from correct relative path -->
+  <script src="../data.js"></script>
+  <script src="../static/logic2.js"></script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hope — Events by Type</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #0f4ca3;
+      --accent-2: #0b6b4f;
+      --glass: rgba(255,255,255,0.7);
+      --shadow: 0 10px 30px rgba(15,23,42,0.06);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html,body{ height:100%; margin:0; font-family: "Montserrat", system-ui, Roboto, Arial, sans-serif; background:var(--bg); color:#0b1220; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+    /* Top bar with back button */
+    .topbar {
+      position: fixed;
+      left: 18px;
+      top: 18px;
+      z-index: 80;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .backBtn {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+      border: 1px solid rgba(15,23,42,0.06);
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--accent);
+      font-weight:700;
+      font-size:14px;
+    }
+    .backBtn:hover { transform: translateY(-1px); box-shadow: 0 18px 40px rgba(15,23,42,0.08); }
+
+    /* Page container */
+    .container {
+      max-width: 1180px;
+      margin: 86px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* Big header */
+    header.pageHead {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .pageTitle {
+      margin:0;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:0.2px;
+    }
+    .pageSub {
+      color:var(--muted);
+      font-weight:600;
+      font-size:13px;
+    }
+
+    /* Big chart card */
+    .chartCard {
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.98));
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(11,17,32,0.04);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .chartInner {
+      display:flex;
+      gap:20px;
+      align-items:stretch;
+      justify-content:space-between;
+    }
+
+    /* left: large bars */
+    .barsArea {
+      flex: 1 1 60%;
+      min-height: 360px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px;
+      background: linear-gradient(180deg, rgba(15,76,163,0.02), rgba(245,247,250,0.6));
+      border-radius: 10px;
+    }
+    canvas#bigBars {
+      width: 100% !important;
+      height: 100% !important;
+      display:block;
+    }
+
+    /* right: single bold total + legend summary */
+    .summaryArea {
+      width: 280px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+    }
+    .totalBox {
+      background: linear-gradient(180deg,var(--accent), #0d3f87);
+      color: #fff;
+      padding: 18px;
+      border-radius: 12px;
+      text-align:center;
+      box-shadow: 0 12px 30px rgba(15,76,163,0.12);
+    }
+    .totalBox .label { font-size:13px; font-weight:700; opacity:0.95; }
+    .totalBox .value { font-size:36px; font-weight:900; margin-top:6px; letter-spacing:0.6px; }
+
+    .typeSummary {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(11,17,32,0.04);
+    }
+    .typeRow {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 2px;
+    }
+    .typeRow .label { font-weight:800; color:#0b1220; font-size:13px; }
+    .typeRow .val { font-weight:900; color:var(--accent); }
+
+    /* Events accordion */
+    .accordion {
+      margin-top: 20px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .typePanel {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(11,17,32,0.04);
+      box-shadow: var(--shadow);
+    }
+    .typeHeader {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 16px;
+      cursor:pointer;
+    }
+    .typeHeader:hover { background: rgba(15,76,163,0.03); }
+    .typeHeader .title { font-weight:900; font-size:15px; }
+    .typeHeader .meta { color:var(--muted); font-weight:700; font-size:13px; }
+
+    .typeBody {
+      padding: 10px 12px 16px 12px;
+      border-top: 1px solid rgba(11,17,32,0.03);
+      display:none;
+    }
+    .typePanel.open .typeBody { display:block; }
+
+    /* Category panels */
+    .categoryPanel {
+      border-radius:10px;
+      overflow:hidden;
+      border:1px solid rgba(11,17,32,0.03);
+      margin-bottom:10px;
+      background: linear-gradient(180deg, #fff, #fbfdff);
+    }
+    .categoryHeader {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 12px;
+      cursor:pointer;
+    }
+    .categoryHeader b { font-weight:900; }
+    .categoryBody { display:none; padding:8px 12px 10px 12px; }
+    .categoryPanel.open .categoryBody { display:block; }
+
+    /* Event row */
+    .eventRow {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 8px 6px;
+      border-bottom: 1px dashed rgba(11,17,32,0.04);
+    }
+    .eventRow:last-child { border-bottom: none; }
+    .eventLeft { display:flex; gap:12px; align-items:center; min-width:0; }
+    .badge {
+      width:36px; height:36px; border-radius:9px; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:900;
+      background: linear-gradient(180deg, var(--accent), #0b3a78);
+    }
+    .eventTitle { min-width:0; }
+    .eventTitle b { display:block; font-weight:800; font-size:14px; }
+    .eventTitle small { color:var(--muted); font-size:12px; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:320px; }
+
+    .eventRight { text-align:right; min-width:96px; }
+    .eventPts { font-weight:900; color:var(--accent-2); }
+    .eventPct { color:var(--muted); font-size:12px; }
+
+    /* Responsive */
+    @media (max-width:1000px) {
+      .chartInner { flex-direction:column; }
+      .summaryArea { width:100%; display:flex; flex-direction:row; gap:12px; }
+      .totalBox { flex:1; }
+      .typeSummary { flex:1; }
+    }
+    @media (max-width:600px) {
+      .container { margin: 110px 16px 60px; }
+      .backBtn { padding:8px 10px; font-size:13px; }
+      .totalBox .value { font-size:28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="backBtn" href="index.html" id="backBtn" title="Back to index">← Back</a>
+  </div>
+
+  <div class="container" id="app">
+    <header class="pageHead" aria-hidden="false">
+      <div>
+        <h1 class="pageTitle">Hope — Events by Type</h1>
+        <div class="pageSub">Type totals and event breakdown. Click a type to expand; click a category to open its events.</div>
+      </div>
+      <div style="min-width:220px"></div>
+    </header>
+
+    <section class="chartCard" aria-label="Type totals charts">
+      <div class="chartInner">
+        <div class="barsArea" aria-hidden="false">
+          <canvas id="bigBars" aria-label="Type totals bars"></canvas>
+        </div>
+
+        <aside class="summaryArea" aria-hidden="false">
+          <div class="totalBox" role="status" aria-live="polite">
+            <div class="label">HOUSE TOTAL</div>
+            <div class="value" id="houseTotal">—</div>
+          </div>
+
+          <div class="typeSummary" aria-label="Type quick totals">
+            <!-- type rows inserted here -->
+            <div id="typeRows"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="accordion" id="eventsAccordion" aria-label="Events list"></section>
+  </div>
+
+  <!-- Chart.js + DataLabels -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+  <script>
+    Chart.register(ChartDataLabels);
+
+    const KNOWN_TYPES = ['Culture','Track','Field','General/Team Sports','Deco','March-Past','Drill'];
+    const CATEGORY_LETTERS = ['a','b','c','d','e','f'];
+
+    const houseTotalEl = document.getElementById('houseTotal');
+    const typeRowsEl = document.getElementById('typeRows');
+    const eventsAccordion = document.getElementById('eventsAccordion');
+    const canvas = document.getElementById('bigBars');
+
+    async function loadData() {
+      try {
+        if (window.EVENTS && typeof window.EVENTS === 'object') return window.EVENTS;
+        const res = await fetch('hopedata.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to fetch hopedatadata.json: ' + res.status);
+        const json = await res.json();
+        window.EVENTS = json;
+        return json;
+      } catch (err) {
+        console.error(err);
+        return { events: [], points: [], types: [], category: [] };
+      }
+    }
+
+    // Build paired event objects with type and category (assign random where missing)
+    function preparePaired(data){
+      const ev = Array.isArray(data.events) ? data.events.slice() : [];
+      const pts = Array.isArray(data.points) ? data.points.slice() : [];
+      const typesArr = Array.isArray(data.types) ? data.types.slice() : null;
+      const catsArr = Array.isArray(data.category) ? data.category.slice() : null;
+      const maxLen = Math.max(ev.length, pts.length);
+      const out = [];
+      for (let i=0;i<maxLen;i++){
+        const label = ev[i] != null ? String(ev[i]) : `Event ${i+1}`;
+        const value = Number(pts[i]) || 0;
+        let type = typesArr && typesArr[i] ? String(typesArr[i]) : null;
+        if (!type) type = KNOWN_TYPES[Math.floor(Math.random()*KNOWN_TYPES.length)];
+        let category = catsArr && catsArr[i] ? String(catsArr[i]) : null;
+        if (!category && ['Track','Field','General/Team Sports'].includes(type)) {
+          category = CATEGORY_LETTERS[Math.floor(Math.random()*CATEGORY_LETTERS.length)];
+        }
+        if (category) category = String(category).toLowerCase().charAt(0);
+        out.push({ label, value, type, category });
+      }
+      if (out.length === 0) out.push({ label: 'No events', value: 0, type: KNOWN_TYPES[0], category: null });
+      return out;
+    }
+
+    function groupByType(paired){
+      const groups = {};
+      for (const p of paired){
+        if (!groups[p.type]) groups[p.type] = [];
+        groups[p.type].push(p);
+      }
+      return groups;
+    }
+
+    function getColorForType(type){
+      const map = {
+        'Culture': 'hsl(285,70%,48%)',
+        'Track': 'hsl(210,80%,44%)',
+        'Field': 'hsl(197,78%,40%)',
+        'General/Team Sports': 'hsl(150,68%,35%)',
+        'Deco': 'hsl(28,85%,48%)',
+        'March-Past': 'hsl(18,85%,46%)',
+        'Drill': 'hsl(255,60%,44%)'
+      };
+      return map[type] || 'hsl(216,68%,36%)';
+    }
+
+    // Render the big bars: one large horizontal bar per type (sorted desc)
+    function renderBars(groups){
+      const items = Object.keys(groups).map(t => ({ type: t, total: groups[t].reduce((s,i)=>s+i.value,0) }));
+      items.sort((a,b)=> b.total - a.total);
+
+      const labels = items.map(i => i.type);
+      const data = items.map(i => i.total);
+      const colors = items.map(i => getColorForType(i.type));
+
+      // height calculation: ~64px per bar for comfortable spacing
+      const perBar = 64;
+      const targetHeight = Math.max(perBar * labels.length, 220);
+      canvas.style.height = targetHeight + 'px';
+
+      if (window._barsChart) try { window._barsChart.destroy(); } catch(e){}
+
+      window._barsChart = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 10, barThickness: Math.min(72, Math.floor(targetHeight / (labels.length * 1.18))) }] },
+        options: {
+          indexAxis: 'y',
+          maintainAspectRatio: false,
+          responsive: true,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            legend: { display:false },
+            datalabels: {
+              anchor: 'center', align: 'center', color: '#fff', font: { weight:'900', size: 15 }, formatter: v => v
+            },
+            tooltip: {
+              callbacks: { label: ctx => `${ctx.label}: ${ctx.raw}` }
+            }
+          },
+          scales: {
+            x: { beginAtZero: true, ticks: { precision:0 }, grid: { display:false }, max: Math.max(1, Math.ceil(Math.max(...data) * 1.08)) },
+            y: { ticks: { color: '#071225', font: { weight:800, size:14 } }, grid: { display:false } }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+
+      // clicking any bar scrolls to its type panel if present
+      canvas.onclick = function(evt){
+        const pts = window._barsChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+        if (!pts || !pts.length) return;
+        const idx = pts[0].index;
+        const type = labels[idx];
+        const el = document.querySelector(`[data-type="${cssEscape(type)}"]`);
+        if (el) {
+          // open the panel then scroll
+          el.classList.add('open');
+          el.querySelector('.typeBody')?.scrollIntoView({ behavior:'smooth', block:'start' });
+        }
+      };
+    }
+
+    // Populate summary area with per-type totals
+    function renderTypeSummary(groups){
+      const rows = Object.keys(groups).map(t => ({ type: t, total: groups[t].reduce((s,i)=>s+i.value,0) }));
+      rows.sort((a,b)=> b.total - a.total);
+      typeRowsEl.innerHTML = rows.map(r => `
+        <div class="typeRow">
+          <div class="label">${escapeHtml(r.type)}</div>
+          <div class="val">${r.total}</div>
+        </div>
+      `).join('');
+    }
+
+    // Build accordion: type panels; inside Track/Field/General -> categories as sub-panels.
+    function buildAccordion(groups){
+      eventsAccordion.innerHTML = '';
+      const types = Object.keys(groups).sort((a,b) => groups[b].reduce((s,i)=>s+i.value,0) - groups[a].reduce((s,i)=>s+i.value,0));
+      for (const type of types){
+        const items = groups[type];
+        const typePanel = document.createElement('div');
+        typePanel.className = 'typePanel';
+        typePanel.setAttribute('data-type', type);
+        // Header
+        const header = document.createElement('div');
+        header.className = 'typeHeader';
+        header.innerHTML = `<div class="title">${escapeHtml(type)}</div><div class="meta">${items.length} • ${items.reduce((s,i)=>s+i.value,0)} pts</div>`;
+        header.addEventListener('click', () => {
+          const open = typePanel.classList.toggle('open');
+          // close siblings
+          document.querySelectorAll('.typePanel').forEach(p => { if (p !== typePanel) p.classList.remove('open'); });
+        });
+
+        // Body
+        const body = document.createElement('div');
+        body.className = 'typeBody';
+
+        if (['Track','Field','General/Team Sports'].includes(type)) {
+          // group by category
+          const byCat = {};
+          for (const it of items) {
+            const cat = it.category || 'uncategorized';
+            if (!byCat[cat]) byCat[cat] = [];
+            byCat[cat].push(it);
+          }
+          const cats = Object.keys(byCat).sort((a,b) => a.localeCompare(b));
+          for (const cat of cats){
+            const catPanel = document.createElement('div');
+            catPanel.className = 'categoryPanel';
+            const catHeader = document.createElement('div');
+            catHeader.className = 'categoryHeader';
+            catHeader.innerHTML = `<b>${cat === 'uncategorized' ? 'Uncategorized' : 'Category ' + cat.toUpperCase()}</b><div style="color:var(--muted);font-weight:700">${byCat[cat].length} events</div>`;
+            catHeader.addEventListener('click', () => catPanel.classList.toggle('open'));
+            const catBody = document.createElement('div');
+            catBody.className = 'categoryBody';
+            for (const ev of byCat[cat]) {
+              catBody.appendChild(makeEventRow(ev));
+            }
+            catPanel.appendChild(catHeader);
+            catPanel.appendChild(catBody);
+            body.appendChild(catPanel);
+          }
+        } else {
+          // flat list
+          for (const ev of items) body.appendChild(makeEventRow(ev));
+        }
+
+        typePanel.appendChild(header);
+        typePanel.appendChild(body);
+        eventsAccordion.appendChild(typePanel);
+      }
+    }
+
+    function makeEventRow(ev){
+      const total = window._houseTotal || 0;
+      const pct = total > 0 ? ((ev.value/total)*100).toFixed(1) + '%' : '0.0%';
+      const row = document.createElement('div');
+      row.className = 'eventRow';
+      row.innerHTML = `
+        <div class="eventLeft">
+          <div class="badge">${escapeHtml((ev.label||'').slice(0,1).toUpperCase())}</div>
+          <div class="eventTitle"><b>${escapeHtml(ev.label)}</b><small>${escapeHtml(ev.type)}${ev.category ? ' · Cat ' + String(ev.category).toUpperCase() : ''}</small></div>
+        </div>
+        <div class="eventRight"><div class="eventPts">${ev.value.toLocaleString()} pts</div><div class="eventPct">${pct}</div></div>
+      `;
+      return row;
+    }
+
+    // Utilities
+    function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    // CSS escape helper for query selector usage (simple)
+    function cssEscape(s){ return s.replace(/([ !"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g,'\\$1'); }
+
+    // Boot
+    (async function init(){
+      const raw = await loadData();
+      const paired = preparePaired(raw);
+      const totalHouse = paired.reduce((s,p)=>s+p.value,0);
+      window._houseTotal = totalHouse;
+      houseTotalEl.textContent = totalHouse.toLocaleString();
+
+      const groups = groupByType(paired);
+      renderBars(groups);
+      renderTypeSummary(groups);
+      buildAccordion(groups);
+    })();
+
+    // expose rebuild function
+    window.rebuild = async function(){ init(); };
+
+  </script>
+</body>
+</html>
+
+

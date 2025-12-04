@@ -1,77 +1,203 @@
+/* reset / base */
+* { box-sizing: border-box; }
+html,body { height: 100%; }
 body {
-  font-family: Arial, sans-serif;
-  background: #f8fafc;
+  font-family: Inter, Arial, sans-serif;
+  background: linear-gradient(180deg, #eef2f7 0%, #f8fafc 100%);
   margin: 0;
-  padding: 20px;
-  text-align: center;
+  padding: 24px;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto 18px;
+}
+.title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #081125;
+  letter-spacing: 0.2px;
+}
+.btn-link { text-decoration: none; }
+.switch-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 0;
+  background: #1d4ed8;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(29,78,216,0.18);
+}
+
+/* scene container */
+.wrap {
+  display: flex;
+  justify-content: center;
+}
+.scene {
+  width: 100%;
+  max-width: 1200px;
+  background: linear-gradient(180deg,#ffffff 0%, #f6f9fb 100%);
+  border-radius: 14px;
+  padding: 28px 20px 40px;
+  box-shadow: 0 12px 30px rgba(12,18,28,0.08);
+}
+
+/* row: widen spacing so flags are well spaced */
 .row {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 72px;
+  align-items: flex-end;
+  padding: 10px 6px 30px;
 }
 
+/* each column containing pole+flag and labels */
 .col {
   position: relative;
-  width: 120px;
+  width: 200px; /* wider so flags don't collide with adjacent columns */
   height: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* The flag pole */
+/* The flag pole - we render centered in the column */
 .pole {
+  position: absolute;
+  top: 40px;
+  left: 50%;                /* centered inside column */
+  transform: translateX(-50%);
   width: 6px;
   height: 440px;
-  background: #333;
-  margin-top: 40px;
-  position: relative;
+  background: linear-gradient(180deg,#444 0%, #1f2937 100%);
+  border-radius: 3px;
+  box-shadow: 0 6px 14px rgba(2,6,23,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
+  z-index: 1;
 }
 
+/* Finial sits on top of the pole (higher z-index) */
 .finial {
-  width: 20px;
-  height: 20px;
-  background: gold;
-  border-radius: 50%;
   position: absolute;
-  top: 20px;
+  width: 18px;
+  height: 18px;
+  left: 50%;
+  top: 31px; /* 40px top of pole minus half finial */
+  transform: translateX(-50%);
+  background: linear-gradient(180deg,#ffd54d,#c68600);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  z-index: 4;
 }
 
-/* The flag itself */
+/* FLAGS: positioned relative to column center so left edge touches pole right edge */
 .flag {
-  width: 100px;
-  height: 60px;
-  border-radius: 6px;
+  --flag-color: #999999;
   position: absolute;
-  left: 20px;
-  transition: all 0.3s ease;
+  width: 170px;
+  height: 64px;
+  border-radius: 12px;
+  bottom: 200px; /* default fallback; JS sets the real bottom */
+  left: calc(50% + 3px); /* 6px pole -> pole's right edge at 50% + 3px; flag left edge touches here */
+  transform-origin: 0 50%;
+  transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 200ms;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 22px;
+  justify-content: flex-start;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 18px 30px rgba(2,6,23,0.08);
+  z-index: 3;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.02) 60%),
+    linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+  border-left: 6px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(2px);
+}
+
+/* small numeric badge inside flag */
+.flag-badge {
+  margin-left: 8px;
+  background: rgba(255,255,255,0.14);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.98);
+  box-shadow: 0 6px 12px rgba(2,6,23,0.08);
+}
+
+/* hover/focus affordances */
+.flag:hover,
+.flag:focus {
+  transform: translateX(8px) rotate(-2deg) scale(1.02);
+  box-shadow: 0 22px 40px rgba(2,6,23,0.14);
+}
+
+/* entrance animation (will be complemented by JS inline transforms) */
+@keyframes flagRiseElastic {
+  0%   { transform: translateY(26px) rotate(6deg) scale(0.98); opacity: 0; }
+  60%  { transform: translateY(-8px) rotate(-3deg) scale(1.01); opacity: 1; }
+  80%  { transform: translateY(4px)  rotate(1.5deg); }
+  100% { transform: translateY(0)     rotate(0); }
 }
 
 /* Ground labels */
 .ground {
   margin-top: 20px;
   text-align: center;
+  padding-top: 12px;
+  width: 100%;
 }
-
 .ground .name {
-  font-weight: bold;
-  font-size: 1.2em;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #0b1220;
+  letter-spacing: 0.6px;
 }
-
 .ground .total {
-  font-size: 1.4em;
-  font-weight: bold;
-  color: #111;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0b1220;
+  margin-top: 6px;
+}
+.ground .sub { font-size: 0.9rem; color: #475569; }
+.ground .lost { font-size: 0.85rem; color: #b91c1c; margin-top: 6px; }
+
+/* decorative baseline */
+.col::before {
+  content: "";
+  position: absolute;
+  bottom: 88px;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(15,23,42,0.04), transparent);
 }
 
-.ground .sub {
-  font-size: 0.9em;
-  color: #555;
+/* responsive tweaks */
+@media (max-width: 1100px) {
+  .row { gap: 44px; }
+  .col { width: 160px; height: 520px; }
+  .flag { width: 150px; left: calc(50% + 3px); height: 58px; border-radius: 10px; }
+  .finial { top: 28px; }
 }
-
-.ground .lost {
-  font-size: 0.8em;
-  color: #c00;
+@media (max-width: 680px) {
+  .scene { padding: 18px; }
+  .row { gap: 28px; flex-wrap: wrap; }
+  .col { width: 140px; height: 480px; }
+  .flag { width: 130px; left: calc(50% + 3px); height: 52px; }
+  .title { font-size: 1rem; }
 }

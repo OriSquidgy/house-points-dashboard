@@ -1,60 +1,156 @@
+// static/logic2.js — place poles explicitly, position flags relative to poles
 window.addEventListener("DOMContentLoaded", () => {
   const palette = { Joy: 'DC2626', Peace: '1E3A8A', Faith: 'FACC15', Hope: '16A34A' };
 
+  if (!window.DATA || !Array.isArray(DATA.houses)) {
+    console.error('DATA.houses not found or invalid. Make sure data.js is loaded before this script.');
+    return;
+  }
+
   const data = (DATA.houses).map((h, i) => {
-    const total = Number(DATA.totalPoints[i]);
-    const lost = Number(DATA.lostPoints[i]);
+    const totalPoints = Number(DATA.totalPoints?.[i] ?? 0);
+    const lostPoints  = Number(DATA.lostPoints?.[i] ?? 0);
     return {
       house: h,
-      points: total - lost,
-      total: total,
-      color: palette[h],
-      link: DATA.links[h]
+      points: Math.max(0, totalPoints - lostPoints),
+      total: Math.max(0, totalPoints),
+      color: palette[h] ?? '999999',
+      link: (DATA.links && DATA.links[h]) || '#'
     };
   });
 
-  data.sort((a, b) => b.points - a.points);
+  data.sort((a,b) => b.points - a.points);
 
-  const poleH = 440;
-  const ground = 130;
-  const flagH = 104;
+  // layout constants
+  const poleH   = 440;
+  const ground  = 130;
+  const flagH   = 104;
   const topSafe = 40;
-  const maxPts = Math.max(...data.map(d=>d.total));
+  const maxPts  = Math.max(1, ...data.map(d => d.total));
 
   const row = document.getElementById('row');
+  row.innerHTML = '';
+
+  // Choose a poleLeft (px) to move poles to the right inside each column.
+  // Increase this value to move all poles (and therefore flags) more to the right.
+  const poleLeft = 44;      // <-- adjust this number to move poles horizontally
+  const poleWidth = 6;      // expected pole width in px
 
   data.forEach((d, idx) => {
     const col = document.createElement('div');
     col.className = 'col';
+    col.style.position = 'relative'; // ensure positioning context
     row.appendChild(col);
 
-    const pole = document.createElement('div'); 
+    // create pole as an absolutely-positioned element inside col
+    const pole = document.createElement('div');
     pole.className = 'pole';
-    const fin  = document.createElement('div'); 
+    // set inline styles to guarantee placement
+    pole.style.position = 'absolute';
+    pole.style.left = poleLeft + 'px';
+    pole.style.top = '40px';
+    pole.style.width = poleWidth + 'px';
+    pole.style.height = poleH + 'px';
+    pole.style.background = 'linear-gradient(180deg,#444 0%, #1f2937 100%)';
+    pole.style.borderRadius = '3px';
+    pole.style.boxShadow = '0 6px 14px rgba(2,6,23,0.06), inset 0 1px 0 rgba(255,255,255,0.02)';
+    // keep pole behind flags visually
+    pole.style.zIndex = '1';
+    col.appendChild(pole);
+
+    // finial on top of the pole
+    const fin = document.createElement('div');
     fin.className = 'finial';
-    col.appendChild(pole); 
+    fin.style.position = 'absolute';
+    fin.style.width = '18px';
+    fin.style.height = '18px';
+    fin.style.left = (poleLeft + poleWidth/2 - 9) + 'px'; // center fin over pole
+    fin.style.top = (40 - 9) + 'px';
+    fin.style.background = 'linear-gradient(180deg,#ffd54d,#c68600)';
+    fin.style.borderRadius = '50%';
+    fin.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
+    fin.style.zIndex = '4';
     col.appendChild(fin);
 
-    const minY = ground + flagH/2 + 8;
-    const maxY = ground + poleH - flagH/2 - 8 - topSafe;
-
+    // Compute vertical placement for flag
+    const minY = ground + flagH / 2 + 8;
+    const maxY = ground + poleH - flagH / 2 - 8 - topSafe;
     const yEarned = ground + (d.points / maxPts) * poleH;
-    const yTotal  = ground + (d.total  / maxPts) * poleH;
+    const clampedYEarned = Math.min(Math.max(yEarned, minY), maxY);
 
-    // Real flag
-    const flag = document.createElement('div');
+    // Flag (button) — positioned absolutely relative to col
+    const flag = document.createElement('button');
     flag.className = 'flag';
-    flag.style.backgroundColor = '#' + d.color;
-    flag.style.bottom = (Math.min(Math.max(yEarned, minY), maxY) - flagH/2) + 'px';
-    flag.style.animationDelay = (idx * 150) + 'ms';
-    flag.style.cursor = "pointer";
-    flag.addEventListener("click", () => {
-      window.location.href = d.link;
+    flag.type = 'button';
+    flag.setAttribute('aria-label', `${d.house} — ${d.points} points`);
+    // position vertically based on points
+    flag.style.position = 'absolute';
+    flag.style.bottom = (clampedYEarned - flagH / 2) + 'px';
+    // set width/height and styling inline to avoid external overrides
+    flag.style.width = '160px';
+    flag.style.height = '64px';
+    flag.style.borderRadius = '12px';
+    flag.style.paddingLeft = '22px';
+    flag.style.display = 'inline-flex';
+    flag.style.alignItems = 'center';
+    flag.style.justifyContent = 'flex-start';
+    flag.style.fontWeight = '700';
+    flag.style.color = '#fff';
+    flag.style.boxShadow = '0 18px 30px rgba(2,6,23,0.08)';
+    flag.style.zIndex = '3';
+    flag.style.cursor = 'pointer';
+    flag.style.border = 'none';
+    flag.style.outline = 'none';
+    // background color + subtle overlay
+    flag.style.background = `linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.03)), #${d.color}`;
+
+    // place left edge of flag exactly at the pole's right edge:
+    const computedFlagLeft = poleLeft + poleWidth; // left edge touching pole's right edge
+    flag.style.left = computedFlagLeft + 'px';
+
+    // badge inside flag
+    const badge = document.createElement('div');
+    badge.className = 'flag-badge';
+    badge.textContent = d.points;
+    badge.style.marginLeft = '8px';
+    badge.style.background = 'rgba(255,255,255,0.14)';
+    badge.style.padding = '6px 10px';
+    badge.style.borderRadius = '999px';
+    badge.style.fontWeight = '800';
+    badge.style.color = 'rgba(255,255,255,0.98)';
+    badge.style.boxShadow = '0 6px 12px rgba(2,6,23,0.08)';
+    flag.appendChild(badge);
+
+    // click behaviour
+    flag.addEventListener('click', () => {
+      if (d.link && d.link !== '#') window.location.href = d.link;
     });
+
     col.appendChild(flag);
 
+    // entrance animation (inline)
+    flag.style.transform = 'translateY(26px) rotate(6deg) scale(0.98)';
+    flag.style.opacity = '0';
+    flag.style.transition = 'transform 700ms cubic-bezier(.22,.9,.32,1), opacity 600ms ease';
+    setTimeout(() => {
+      flag.style.transform = 'translateY(0) rotate(0) scale(1)';
+      flag.style.opacity = '1';
+    }, 120 + idx * 120);
 
-    // Ground labels (earned + lost)
+    // subtle idle motion implemented with JS (doesn't rely on CSS keyframes)
+    setTimeout(() => {
+      let state = 0;
+      setInterval(() => {
+        state = 1 - state;
+        if (state === 0) {
+          flag.style.transform = 'translateY(0) rotate(0) scale(1)';
+        } else {
+          flag.style.transform = 'translateY(-3px) rotate(-0.9deg) scale(1)';
+        }
+      }, 2800 + idx * 100);
+    }, 900 + idx * 60);
+
+    // Ground labels
     const lost = d.total - d.points;
     const groundLbl = document.createElement('div');
     groundLbl.className = 'ground';
@@ -64,7 +160,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div class="sub">points</div>
       <div class="lost">Lost: ${lost}</div>
     `;
-    
     col.appendChild(groundLbl);
+  });
 });
-})
+
