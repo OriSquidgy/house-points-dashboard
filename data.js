@@ -8,19 +8,19 @@ window.DATA = {
     "totalPoints": [
         500,
         200,
-        50,
-        425
+        300,
+        50
     ],
     "lostPoints": [
         2,
         100,
-        10,
-        200
+        12,
+        10
     ],
     "links": {
-        "Joy": "joy.html",
-        "Peace": "peace.html",
-        "Faith": "faith.html",
-        "Hope": "hope.html"
+        "Joy": "../joy.html",
+        "Peace": "../peace.html",
+        "Faith": "../faith.html",
+        "Hope": "../hope.html"
     }
 };

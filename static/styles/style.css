@@ -24,6 +24,7 @@ body, html {
     canvas {
       width: 100% !important;
       height: 100% !important;
+      display: block;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -284,4 +285,145 @@ header .switch-btn:hover {
   will-change: transform;
   position: absolute;
   z-index: 10;   /* make sure real flags sit above everything */
+}
+
+#eventResults {
+  margin: 32px auto 0;
+  width: 95%;
+  background: #f9fafb;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 20px 24px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+}
+
+#eventResults h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+/* Each dropdown group */
+.event-group {
+  padding: 10px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.event-group:first-of-type {
+  border-top: none;
+}
+
+/* Summary line with arrow */
+.event-group summary {
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Hide default marker and use our own arrow */
+.event-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.event-group summary::before {
+  content: "▸";
+  font-size: 30px;
+  margin-right: 8px;
+  color: #6b7280;
+  transition: transform 0.15s ease-out;
+}
+
+.event-group[open] summary::before {
+  transform: rotate(90deg);
+}
+
+/* List inside dropdown */
+.event-group ol {
+  margin-top: 6px;
+  padding-left: 18px;
+  list-style-type: none;      /* we print our own “1. 2. 3.” in JS */
+  list-style-position: inside;
+}
+
+/* Simple, clean rows */
+.event-group li {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.event-group li + li {
+  margin-top: 2px;
+}
+
+/* Slightly nicer spacing on larger screens */
+@media (min-width: 900px) {
+  #eventResults {
+    padding: 22px 30px;
+  }
+}
+
+/* House colours just on the house name */
+.house-joy {
+  color: #DC2626;
+  font-weight: 600;
+}
+.house-peace {
+  color: #1E3A8A;
+  font-weight: 600;
+}
+.house-hope {
+  color: #16A34A;
+  font-weight: 600;
+}
+.house-faith {
+  color: #FACC15;
+  font-weight: 600;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-btn {
+  padding: 6px 12px;
+  background: #e5e7eb;
+  color: #111827;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.toggle-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+.toggle-btn:hover {
+  background: #d1d5db;
+}
+
+.chart-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.chart-container {
+  position: relative;
+  height: 500px;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
