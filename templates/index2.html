@@ -35,17 +35,12 @@
     const isMobile = window.matchMedia('(max-width: 820px)').matches;
     const warning = document.getElementById('mobile-warning');
 
-    if (isMobile) {
-      warning?.classList.remove('hidden');
-    }
+    if (isMobile) warning?.classList.remove('hidden');
 
     document.getElementById('dismiss-warning')?.addEventListener('click', () => {
       warning?.classList.add('hidden');
     });
+  </script>
 
-    window.matchMedia('(max-width: 820px)').addEventListener('change', (e) => {
-      if (e.matches) warning?.classList.remove('hidden');
-    });
-</script>
 </body>
 </html>
