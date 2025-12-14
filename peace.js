@@ -1,44 +1,86 @@
 window.EVENTS ={
     "dates": [
-        "4/1/2026",
-        "1/1/2026",
-        "6/2/2026",
-        "7/5/2026"
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
     ],
     "events": [
-        "Octuple jump",
-        "10000m sprint",
-        "Pookalam",
-        "Football"
+        "Basketball",
+        "Basketball",
+        "Basketball",
+        "Basketball",
+        "Football",
+        "Football",
+        "Football",
+        "Football",
+        "Cricket",
+        "Cricket"
     ],
     "category": [
-        "B",
-        "A",
-        "All House",
-        "MS"
+        "ES",
+        "ES",
+        "MS",
+        "HS",
+        "ES",
+        "ES",
+        "MS",
+        "HS",
+        "ES",
+        "MS/HS"
     ],
     "gender": [
         "Girls",
         "Boys",
-        "",
-        "Boys"
+        "Mixed",
+        "Mixed",
+        "Boys",
+        "Girls",
+        "Mixed",
+        "Mixed",
+        "Mixed",
+        "Mixed"
     ],
     "points": [
-        12,
-        5,
-        15,
-        10
+        20,
+        20,
+        30,
+        40,
+        20,
+        20,
+        40,
+        50,
+        20,
+        50
     ],
     "places": [
-        "1st",
+        "4th",
+        "4th",
         "3rd",
         "2nd",
-        "2nd"
+        "4th",
+        "4th",
+        "2nd",
+        "1st",
+        "4th",
+        "1st"
     ],
     "types": [
-        "Field",
-        "Track",
-        "Culture",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
         "General/Team Sports"
     ]
 };

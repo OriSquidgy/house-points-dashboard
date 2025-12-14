@@ -55,6 +55,9 @@ function drawChart() {
   const ctx = canvas.getContext('2d');
   if (!ctx) { console.error('2D context not available'); return; }
 
+  const isMobile = window.matchMedia('(max-width: 520px)').matches;
+
+
   // destroy previous instance if present
   if (window._houseChart && typeof window._houseChart.destroy === 'function') {
     window._houseChart.destroy();
@@ -136,11 +139,11 @@ function drawChart() {
           backgroundColor: colors,
           borderRadius: 14,
           datalabels: {
-            clip: false,                 // draw on top
+            clip: isMobile,                 // draw on top
             color: '#ffffff',
             anchor: 'center',            // vertically centered inside segment
-            align: 'right',              // place near end of coloured segment
-            offset: -8,                  // shift slightly left inside the coloured segment
+            align: isMobile ? 'center' : 'right',              // place near end of coloured segment
+            offset: isMobile ? 0 : -8,
             clamp: true,
             formatter: v => v,
             // compute whether label should be displayed and the font size that fits
@@ -188,13 +191,21 @@ function drawChart() {
       maintainAspectRatio: false,
       devicePixelRatio: window.devicePixelRatio || 1,
       animation: false,
-      layout: { padding: { left: 24, right: 96, top: 12, bottom: 12 } },
+      layout: {
+        padding: {
+          left: isMobile ? 10 : 24,
+          right: isMobile ? 18 : 96,
+          top: 12,
+          bottom: 12
+        }
+      },
+
 
       plugins: {
         legend: {
           display: true,
           position: 'bottom',
-          labels: { font: { size: 16, weight: '700' }, boxWidth: 18, boxHeight: 12 },
+          labels: { font: { size: isMobile ? 13 : 16, weight: '700' }, boxWidth: 18, boxHeight: 12 },
           align: 'center'
         },
         datalabels: { display: true },
@@ -211,7 +222,7 @@ function drawChart() {
         },
         y: {
           stacked: true,
-          ticks: { font: { size: 20, weight: '700' }, color: '#6b6b6b', padding: 12 },
+          ticks: { font: { size: isMobile ? 16 : 20, weight: '700' }, color: '#6b6b6b', padding: isMobile ? 6 : 12 },
           grid: { display: false }
         }
       },
@@ -273,7 +284,7 @@ function drawChart() {
     const groups = {};
     rows.forEach(r => {
       let key;
-      if (["MS", "HS", "ES", "EY"].includes(r.category)) {
+      if (["MS", "HS", "ES", "EY", "MS/HS"].includes(r.category)) {
         // Middle/High/Elementary/Early Years — show category directly, no "Category"
         key = `${r.category} ${r.gender} ${r.eventName}`;
       } else if (r.category === "All House") {
@@ -289,32 +300,96 @@ function drawChart() {
     });
 
     const heading = document.createElement("h2");
-    heading.textContent = "Event Results (most recent first)";
+    heading.textContent = "Event Results (events are updated after their respective prize distribution)";
     container.appendChild(heading);
 
-    Object.keys(groups).forEach(key => {
+    // Accordion wrapper (matches peace.html structure)
+    const accordion = document.createElement("section");
+    accordion.className = "accordion";
+    container.appendChild(accordion);
+
+    // Make newest groups appear first (since rows are already sorted newest→oldest,
+    // the first row inside each group is newest; but we also want group ordering by newest)
+    const keys = Object.keys(groups).sort((a, b) => {
+      const aDate = groups[a][0]?.dateObj?.getTime?.() ?? 0;
+      const bDate = groups[b][0]?.dateObj?.getTime?.() ?? 0;
+      return bDate - aDate;
+    });
+
+    keys.forEach(key => {
       const results = groups[key];
 
-      const details = document.createElement("details");
-      details.className = "event-group";
+      const panel = document.createElement("div");
+      panel.className = "typePanel";     // same classname as peace.html
 
-      const summary = document.createElement("summary");
-      summary.textContent = key;
-      details.appendChild(summary);
+      const header = document.createElement("div");
+      header.className = "typeHeader";
+      header.innerHTML = `
+        <div class="title">${escapeHtml(key)}</div>
+      `;
 
-      const list = document.createElement("ol");
-      list.style.listStyle = "none";
-
-      results.forEach(r => {
-        const li = document.createElement("li");
-        const num = parseInt(r.place);
-        li.innerHTML = `${num}. <span class="house-${r.house.toLowerCase()}">${r.house}</span> (${r.points} points)`;
-        list.appendChild(li);
+      header.addEventListener("click", () => {
+        // open/close this, close siblings (accordion behavior)
+        const open = panel.classList.toggle("open");
+        accordion.querySelectorAll(".typePanel").forEach(p => {
+          if (p !== panel) p.classList.remove("open");
+        });
       });
 
-      details.appendChild(list);
-      container.appendChild(details);
+      const body = document.createElement("div");
+      body.className = "typeBody";
+
+      // Build rows like peace.html (badge left, points right)
+      results.forEach(r => {
+        const row = document.createElement("div");
+        row.className = "eventRow";
+
+        const placeMatch = String(r.place || "").match(/\d+/);
+        const placeNum = placeMatch ? parseInt(placeMatch[0], 10) : null;
+
+        function ordinal(n) {
+          if (!n) return "?";
+          if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
+          switch (n % 10) {
+            case 1: return `${n}<sup>st</sup>`;
+            case 2: return `${n}<sup>nd</sup>`;
+            case 3: return `${n}<sup>rd</sup>`;
+            default: return `${n}<sup>th</sup>`;
+          }
+        }
+
+        const badgeText = ordinal(placeNum);
+
+        row.innerHTML = `
+          <div class="eventLeft">
+            <div class="badge place-${placeNum}">${badgeText}</div>
+            <div class="eventTitle">
+              <b>${escapeHtml(r.house)}</b>
+            </div>
+          </div>
+          <div class="eventRight">
+            <div class="eventPts">${escapeHtml(String(r.points))} pts</div>
+          </div>
+        `;
+
+        body.appendChild(row);
+      });
+
+      panel.appendChild(header);
+      panel.appendChild(body);
+      accordion.appendChild(panel);
     });
+
+    // helper copied from peace.html pattern
+    function escapeHtml(s){
+      return String(s || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;");
+    }
+
+
   } catch (e) {
     console.error("Error building event results:", e);
   }

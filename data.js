@@ -6,16 +6,16 @@ window.DATA = {
         "Hope"
     ],
     "totalPoints": [
-        500,
-        200,
-        300,
-        50
+        1355,
+        1405,
+        1380,
+        1390
     ],
     "lostPoints": [
-        2,
-        100,
-        12,
-        10
+        0,
+        0,
+        0,
+        0
     ],
     "links": {
         "Joy": "../joy.html",

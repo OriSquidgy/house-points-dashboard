@@ -1,44 +1,86 @@
 window.EVENTS ={
     "dates": [
-        "3/1/2026",
-        "1/1/2026",
-        "6/2/2026",
-        "7/5/2026"
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
     ],
     "events": [
-        "1m hurdles",
-        "10000m sprint",
-        "Pookalam",
-        "Football"
+        "Basketball",
+        "Basketball",
+        "Basketball",
+        "Basketball",
+        "Football",
+        "Football",
+        "Football",
+        "Football",
+        "Cricket",
+        "Cricket"
     ],
     "category": [
-        "F",
-        "A",
-        "All House",
-        "MS"
+        "ES",
+        "ES",
+        "MS",
+        "HS",
+        "ES",
+        "ES",
+        "MS",
+        "HS",
+        "ES",
+        "MS/HS"
     ],
     "gender": [
+        "Girls",
         "Boys",
+        "Mixed",
+        "Mixed",
         "Boys",
-        "",
-        "Boys"
+        "Girls",
+        "Mixed",
+        "Mixed",
+        "Mixed",
+        "Mixed"
     ],
     "points": [
-        10,
-        10,
-        10,
-        15
+        30,
+        40,
+        50,
+        50,
+        30,
+        40,
+        50,
+        20,
+        40,
+        20
     ],
     "places": [
         "3rd",
         "2nd",
+        "1st",
+        "1st",
         "3rd",
-        "1st"
+        "2nd",
+        "1st",
+        "4th",
+        "2nd",
+        "4th"
     ],
     "types": [
-        "Field",
-        "Track",
-        "Culture",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
         "General/Team Sports"
     ]
 };

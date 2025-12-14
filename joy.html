@@ -9,10 +9,10 @@
 
   <style>
     :root{
-      --bg: #f6f8fb;
+      --bg: rgba(255,0,0,0.5); 
       --card: #ffffff;
       --muted: #6b7280;
-      --accent: #0f7ac3;
+      --accent: #ff0000;
       --accent-2: #0b8b5f;
       --glass: rgba(255,255,255,0.7);
       --shadow: 0 10px 30px rgba(15,23,42,0.06);
@@ -41,7 +41,7 @@
       border-radius: 10px;
       box-shadow: var(--shadow);
       text-decoration: none;
-      color: var(--accent);
+      color: black;
       font-weight:700;
       font-size:14px;
     }
@@ -50,8 +50,8 @@
     /* Page container */
     .container {
       max-width: 1180px;
-      margin: 86px auto 60px;
-      padding: 0 20px;
+      margin: 86px;
+      justify-content: left;
     }
 
     /* Big header */
@@ -119,12 +119,12 @@
       align-items:stretch;
     }
     .totalBox {
-      background: linear-gradient(180deg,var(--accent), #0b5f9e);
+      background: linear-gradient(180deg,var(--accent), rgb(255, 0, 0));
       color: #fff;
       padding: 18px;
       border-radius: 12px;
       text-align:center;
-      box-shadow: 0 12px 30px rgba(15,76,163,0.12);
+      box-shadow: 0 12px 30px rgba(53, 9, 9, 0.12);
     }
     .totalBox .label { font-size:13px; font-weight:700; opacity:0.95; letter-spacing:0.6px; }
     .totalBox .value { font-size:36px; font-weight:900; margin-top:6px; letter-spacing:0.6px; }
@@ -246,13 +246,18 @@
       background:#fff;
       padding:6px;
     }
+    .toppart{
+      display:flex;
+      background-color: #ff0000;
+    }
+
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <a class="backBtn" href="templates/index.html" id="backBtn" title="Back to index">← Back</a>
-    <!-- included uploaded image (local path) -->
-    <img class="headerImage" alt="house image" src="/mnt/data/27a46685-4aa7-4213-8dba-f895acf026f4.png" />
+  <div class="toppart">
+    <div class="topbar">
+      <a class="backBtn" href="templates/index.html" id="backBtn" title="Back to index">← Back</a>
+    </div>
   </div>
 
   <div class="container" id="app">
@@ -551,4 +556,3 @@
   </script>
 </body>
 </html>
-

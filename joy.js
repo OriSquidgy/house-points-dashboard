@@ -1,44 +1,86 @@
 window.EVENTS ={
     "dates": [
-        "5/1/2026",
-        "1/1/2026",
-        "6/2/2026",
-        "7/5/2026"
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
     ],
     "events": [
-        "2500lb shotput",
-        "10000m sprint",
-        "Pookalam",
-        "Football"
+        "Basketball",
+        "Basketball",
+        "Basketball",
+        "Basketball",
+        "Football",
+        "Football",
+        "Football",
+        "Football",
+        "Cricket",
+        "Cricket"
     ],
     "category": [
-        "E",
-        "A",
-        "All House",
-        "MS"
+        "ES",
+        "ES",
+        "MS",
+        "HS",
+        "ES",
+        "ES",
+        "MS",
+        "HS",
+        "ES",
+        "MS/HS"
     ],
     "gender": [
+        "Girls",
         "Boys",
+        "Mixed",
+        "Mixed",
         "Boys",
-        "",
-        "Boys"
+        "Girls",
+        "Mixed",
+        "Mixed",
+        "Mixed",
+        "Mixed"
     ],
     "points": [
-        5,
-        15,
-        25,
-        5
+        50,
+        30,
+        20,
+        20,
+        50,
+        50,
+        30,
+        30,
+        50,
+        40
     ],
     "places": [
+        "1st",
+        "3rd",
+        "4th",
+        "4th",
+        "1st",
+        "1st",
+        "3rd",
         "3rd",
         "1st",
-        "1st",
-        "3rd"
+        "2nd"
     ],
     "types": [
-        "March-past",
-        "Track",
-        "Culture",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
         "General/Team Sports"
     ]
 };

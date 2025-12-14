@@ -21,11 +21,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   data.sort((a,b) => b.points - a.points);
 
+  const isMobile = window.matchMedia('(max-width: 520px)').matches;
+
   // layout constants
-  const poleH   = 440;
-  const ground  = 130;
-  const flagH   = 104;
+  const poleH   = isMobile ? 320 : 440;
+  const ground  = isMobile ? 110 : 130;
+  const flagH   = isMobile ? 84  : 104;
+  const flagW   = isMobile ? 130 : 160;
   const topSafe = 40;
+  const poleOffsetY = isMobile ? 110 : 150;
   const maxPts  = Math.max(1, ...data.map(d => d.total));
 
   const row = document.getElementById('row');
@@ -86,10 +90,10 @@ window.addEventListener("DOMContentLoaded", () => {
     flag.setAttribute('aria-label', `${d.house} — ${d.points} points`);
     // position vertically based on points
     flag.style.position = 'absolute';
-    flag.style.bottom = (clampedYEarned - flagH / 2 - 150) + 'px';
+    flag.style.bottom = (clampedYEarned - flagH / 2 - poleOffsetY) + 'px';
     // set width/height and styling inline to avoid external overrides
-    flag.style.width = '160px';
-    flag.style.height = '100px';
+    flag.style.width = flagW + 'px';
+    flag.style.height = flagH + 'px';
     flag.style.borderRadius = '12px';
     flag.style.paddingLeft = '0px';
     flag.style.display = 'inline-flex';
@@ -202,7 +206,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const groups = {};
     rows.forEach(r => {
       let key;
-      if (["MS", "HS", "ES", "EY"].includes(r.category)) {
+      if (["MS", "HS", "ES", "EY", "MS/HS"].includes(r.category)) {
         // Middle/High/Elementary/Early Years — show category directly, no "Category"
         key = `${r.category} ${r.gender} ${r.eventName}`;
       } else if (r.category === "All House") {
@@ -218,32 +222,96 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     const heading = document.createElement("h2");
-    heading.textContent = "Event Results (most recent first)";
+    heading.textContent = "Event Results (events are updated after their respective prize distribution)";
     container.appendChild(heading);
 
-    Object.keys(groups).forEach(key => {
+    // Accordion wrapper (matches peace.html structure)
+    const accordion = document.createElement("section");
+    accordion.className = "accordion";
+    container.appendChild(accordion);
+
+    // Make newest groups appear first (since rows are already sorted newest→oldest,
+    // the first row inside each group is newest; but we also want group ordering by newest)
+    const keys = Object.keys(groups).sort((a, b) => {
+      const aDate = groups[a][0]?.dateObj?.getTime?.() ?? 0;
+      const bDate = groups[b][0]?.dateObj?.getTime?.() ?? 0;
+      return bDate - aDate;
+    });
+
+    keys.forEach(key => {
       const results = groups[key];
 
-      const details = document.createElement("details");
-      details.className = "event-group";
+      const panel = document.createElement("div");
+      panel.className = "typePanel";     // same classname as peace.html
 
-      const summary = document.createElement("summary");
-      summary.textContent = key;
-      details.appendChild(summary);
+      const header = document.createElement("div");
+      header.className = "typeHeader";
+      header.innerHTML = `
+        <div class="title">${escapeHtml(key)}</div>
+      `;
 
-      const list = document.createElement("ol");
-      list.style.listStyle = "none";
-
-      results.forEach(r => {
-        const li = document.createElement("li");
-        const num = parseInt(r.place);
-        li.innerHTML = `${num}. <span class="house-${r.house.toLowerCase()}">${r.house}</span> (${r.points} points)`;
-        list.appendChild(li);
+      header.addEventListener("click", () => {
+        // open/close this, close siblings (accordion behavior)
+        const open = panel.classList.toggle("open");
+        accordion.querySelectorAll(".typePanel").forEach(p => {
+          if (p !== panel) p.classList.remove("open");
+        });
       });
 
-      details.appendChild(list);
-      container.appendChild(details);
+      const body = document.createElement("div");
+      body.className = "typeBody";
+
+      // Build rows like peace.html (badge left, points right)
+      results.forEach(r => {
+        const row = document.createElement("div");
+        row.className = "eventRow";
+
+        const placeMatch = String(r.place || "").match(/\d+/);
+        const placeNum = placeMatch ? parseInt(placeMatch[0], 10) : null;
+
+        function ordinal(n) {
+          if (!n) return "?";
+          if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
+          switch (n % 10) {
+            case 1: return `${n}<sup>st</sup>`;
+            case 2: return `${n}<sup>nd</sup>`;
+            case 3: return `${n}<sup>rd</sup>`;
+            default: return `${n}<sup>th</sup>`;
+          }
+        }
+
+        const badgeText = ordinal(placeNum);
+
+        row.innerHTML = `
+          <div class="eventLeft">
+            <div class="badge place-${placeNum}">${badgeText}</div>
+            <div class="eventTitle">
+              <b>${escapeHtml(r.house)}</b>
+            </div>
+          </div>
+          <div class="eventRight">
+            <div class="eventPts">${escapeHtml(String(r.points))} pts</div>
+          </div>
+        `;
+
+        body.appendChild(row);
+      });
+
+      panel.appendChild(header);
+      panel.appendChild(body);
+      accordion.appendChild(panel);
     });
+
+    // helper copied from peace.html pattern
+    function escapeHtml(s){
+      return String(s || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;");
+    }
+
+
   } catch (e) {
     console.error("Error building event results:", e);
   }

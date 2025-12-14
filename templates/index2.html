@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sports Day House Points</title>
   <link rel="stylesheet" href="../static/styles/style2.css">
 </head>
+<div id="mobile-warning" class="mobile-warning hidden">
+  <div class="mobile-warning-card">
+    <strong>Desktop recommended</strong>
+    <p>
+      This view is best experienced on desktop.<br>
+      For mobile, please use <b>Bar View</b>.
+    </p>
+    <button id="dismiss-warning">Got it</button>
+  </div>
+</div>
 <body>
   <header>
     <div class="title">Sports Day House Points</div>
@@ -15,9 +26,22 @@
       <div id="row" class="row"></div>
     </div>
   </div>
+  <hr class="full-divider">
   <div id="eventResults"></div>
   <script src="../events.js"></script>
   <script src="../data.js"></script>
   <script src="../static/logic2.js"></script>
+  <script>
+    const isMobile = window.matchMedia('(max-width: 820px)').matches;
+
+    if (isMobile && !sessionStorage.getItem('hideFlagsWarning')) {
+      document.getElementById('mobile-warning')?.classList.remove('hidden');
+    }
+
+    document.getElementById('dismiss-warning')?.addEventListener('click', () => {
+      sessionStorage.setItem('hideFlagsWarning', '1');
+      document.getElementById('mobile-warning')?.classList.add('hidden');
+    });
+</script>
 </body>
 </html>
