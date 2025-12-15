@@ -54,9 +54,7 @@ function drawChart() {
   if (!canvas) { console.error('Canvas not found'); return; }
   const ctx = canvas.getContext('2d');
   if (!ctx) { console.error('2D context not available'); return; }
-
-  const isMobile = window.matchMedia('(max-width: 520px)').matches;
-
+  const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
   // destroy previous instance if present
   if (window._houseChart && typeof window._houseChart.destroy === 'function') {
@@ -139,11 +137,11 @@ function drawChart() {
           backgroundColor: colors,
           borderRadius: 14,
           datalabels: {
-            clip: isMobile,                 // draw on top
+            clip: isMobile,                 // clip on mobile so text can't spill out
             color: '#ffffff',
             anchor: 'center',            // vertically centered inside segment
             align: isMobile ? 'center' : 'right',              // place near end of coloured segment
-            offset: isMobile ? 0 : -8,
+            offset: isMobile ? 0 : -8,                  // shift slightly left inside the coloured segment
             clamp: true,
             formatter: v => v,
             // compute whether label should be displayed and the font size that fits
@@ -200,7 +198,6 @@ function drawChart() {
         }
       },
 
-
       plugins: {
         legend: {
           display: true,
@@ -215,11 +212,12 @@ function drawChart() {
       scales: {
         x: {
           stacked: true,
-          beginAtZero: true,
-          max: maxWithPadding,
+          min: 1300,                 
+          max: maxWithPadding - 75,
           ticks: { font: { size: 14 }, color: '#333', precision: 0 },
           grid: { color: 'rgba(0,0,0,0.06)' }
         },
+
         y: {
           stacked: true,
           ticks: { font: { size: isMobile ? 16 : 20, weight: '700' }, color: '#6b6b6b', padding: isMobile ? 6 : 12 },
@@ -394,3 +392,29 @@ function drawChart() {
     console.error("Error building event results:", e);
   }
 }
+
+const flagsBtn = document.getElementById("flags-btn");
+const warning = document.getElementById("mobile-warning");
+const dismissBtn = document.getElementById("dismiss-warning");
+
+flagsBtn?.addEventListener("click", () => {
+  const isMobile = window.innerWidth < 768;
+
+  if (isMobile) {
+    // Mobile → show popup
+    warning.classList.remove("hidden");
+  } else {
+    // Desktop → go to flags view
+    window.location.href = "index2.html";
+  }
+});
+
+dismissBtn?.addEventListener("click", () => {
+  warning.classList.add("hidden");
+});
+
+warning?.addEventListener("click", (e) => {
+  if (e.target === warning) {
+    warning.classList.add("hidden");
+  }
+});

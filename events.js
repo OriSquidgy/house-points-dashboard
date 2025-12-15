@@ -39,6 +39,10 @@ window.EVENTS = {
         "",
         "",
         "",
+        "",
+        "",
+        "",
+        "",
         ""
     ],
     "events": [
@@ -81,7 +85,11 @@ window.EVENTS = {
         "Cricket",
         "Cricket",
         "Cricket",
-        "Cricket"
+        "Cricket",
+        "Throwball",
+        "Throwball",
+        "Throwball",
+        "Throwball"
     ],
     "category": [
         "ES",
@@ -123,6 +131,10 @@ window.EVENTS = {
         "MS/HS",
         "MS/HS",
         "MS/HS",
+        "MS/HS",
+        "MS/HS",
+        "MS/HS",
+        "MS/HS",
         "MS/HS"
     ],
     "gender": [
@@ -150,6 +162,10 @@ window.EVENTS = {
         "Girls",
         "Girls",
         "Girls",
+        "Mixed",
+        "Mixed",
+        "Mixed",
+        "Mixed",
         "Mixed",
         "Mixed",
         "Mixed",
@@ -207,9 +223,17 @@ window.EVENTS = {
         "Peace",
         "Joy",
         "Hope",
-        "Faith"
+        "Faith",
+        "Hope",
+        "Faith",
+        "Joy",
+        "Peace"
     ],
     "points": [
+        50,
+        40,
+        30,
+        20,
         50,
         40,
         30,
@@ -291,9 +315,17 @@ window.EVENTS = {
         "1st",
         "2nd",
         "3rd",
+        "4th",
+        "1st",
+        "2nd",
+        "3rd",
         "4th"
     ],
     "types": [
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",

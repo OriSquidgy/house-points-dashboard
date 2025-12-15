@@ -2,7 +2,7 @@ body, html {
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #eef1f5;
+      background: #f9fafb;
       font-family: system-ui, sans-serif;
     }
     header {
@@ -17,8 +17,8 @@ body, html {
       letter-spacing: 1px;
     }
     main {
-      height: calc(100vh - 80px);
-      padding: 40px 40px 24px; /* margin around chart */
+      height: calc(100% - 80px);
+      padding: 40px; /* margin around chart */
       box-sizing: border-box;
     }
     canvas {
@@ -291,7 +291,7 @@ header .switch-btn:hover {
   background: #ffffff;
   border-radius: 18px;
   padding: 22px 26px;
-  margin: 40px auto;
+  margin: auto auto;
   max-width: 1200px;
 
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
@@ -299,30 +299,35 @@ header .switch-btn:hover {
 }
 
 #eventResults h2 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
-  margin-bottom: 12px;
+  color: #111827;
+  margin-bottom: 10px;
 }
 
-/* each dropdown row */
+/* Each dropdown group */
 .event-group {
-  border-top: 1px solid #e5e7eb;
   padding: 10px 0;
+  border-top: 1px solid #e5e7eb;
 }
 
 .event-group:first-of-type {
   border-top: none;
 }
 
+/* Summary line with arrow */
 .event-group summary {
   list-style: none;
   cursor: pointer;
-  font-size: 20px;
   font-weight: 600;
+  font-size: 15px;
+  color: #1f2937;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 }
 
+/* Hide default marker and use our own arrow */
 .event-group summary::-webkit-details-marker {
   display: none;
 }
@@ -330,23 +335,32 @@ header .switch-btn:hover {
 .event-group summary::before {
   content: "▸";
   font-size: 30px;
-  margin-right: 10px;
+  margin-right: 8px;
   color: #6b7280;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease-out;
 }
 
 .event-group[open] summary::before {
   transform: rotate(90deg);
 }
 
+/* List inside dropdown */
 .event-group ol {
-  list-style: none;
-  padding-left: 20px;
   margin-top: 6px;
+  padding-left: 18px;
+  list-style-type: none;      /* we print our own “1. 2. 3.” in JS */
+  list-style-position: inside;
 }
 
+/* Simple, clean rows */
 .event-group li {
-  font-size: 18px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.event-group li + li {
+  margin-top: 2px;
 }
 
 /* Slightly nicer spacing on larger screens */
@@ -420,7 +434,7 @@ header .switch-btn:hover {
   height: 2px; 
   background: #000000;
   border: none;
-  margin: 40px 0;
+  margin: 100px auto;
   position: relative;
   left: 50%;
   right: 50%;
@@ -645,6 +659,96 @@ header .switch-btn:hover {
   color: #ffffff !important;
 }
 
+
+/* ===== Responsive chart sizing ===== */
+.chart-wrap { max-width: 1100px; margin: 0 auto; }
+.chart-container { height: 520px; }
+.chart-container canvas { width: 100% !important; height: 100% !important; display: block; }
+
+@media (max-width: 520px){
+  header{
+    height: auto;
+    padding: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 1.25rem;
+  }
+  header .title{
+    flex: 1 1 100%;
+    text-align: left;
+  }
+  header .switch-btn{
+    height: 44px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 0 14px;
+  }
+
+  main{ padding: 14px 12px 20px; }
+  .chart-container{ height: 420px; }
+}
+
+
+/* modal overlay */
+.mobile-warning{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+/* the card */
+.mobile-warning-card{
+  background: #fff;
+  color: #111827;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  padding: 18px 20px;
+  width: min(420px, 92vw);
+  line-height: 1.35;
+}
+
+/* button styling */
+.mobile-warning-card button{
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.mobile-warning.hidden { pointer-events: none; }
+.hidden {
+  display: none;
+}
+
+.chart-caption {
+  font-family: 'Shadows Into Light', cursive;
+  font-size: 50px;
+  color: #000000; /* or whatever fits your theme */
+  margin-top: 5px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.header-logo{
+  height: 70px;
+  width: auto;
+  margin-left: 12px;   /* ← move right */
+}
+
+.page-footer {
+  margin-top: 48px;
+  padding: 16px 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--muted);
+  background: transparent;
+}
 
 /* ===== Responsive chart sizing ===== */
 .chart-wrap { max-width: 1100px; margin: 0 auto; }

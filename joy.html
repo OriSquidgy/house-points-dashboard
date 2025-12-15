@@ -9,7 +9,7 @@
 
   <style>
     :root{
-      --bg: rgba(255,0,0,0.5); 
+      --bg: f6f8fb; 
       --card: #ffffff;
       --muted: #6b7280;
       --accent: #ff0000;
@@ -41,7 +41,7 @@
       border-radius: 10px;
       box-shadow: var(--shadow);
       text-decoration: none;
-      color: black;
+      color: var(--accent);
       font-weight:700;
       font-size:14px;
     }
@@ -50,9 +50,10 @@
     /* Page container */
     .container {
       max-width: 1180px;
-      margin: 86px;
-      justify-content: left;
+      margin: 86px auto 60px;
+      padding: 0 20px;
     }
+
 
     /* Big header */
     header.pageHead {
@@ -119,12 +120,12 @@
       align-items:stretch;
     }
     .totalBox {
-      background: linear-gradient(180deg,var(--accent), rgb(255, 0, 0));
+      background: linear-gradient(180deg,var(--accent), #9e0b0b);
       color: #fff;
       padding: 18px;
       border-radius: 12px;
       text-align:center;
-      box-shadow: 0 12px 30px rgba(53, 9, 9, 0.12);
+      box-shadow: 0 12px 30px rgba(15,76,163,0.12);
     }
     .totalBox .label { font-size:13px; font-weight:700; opacity:0.95; letter-spacing:0.6px; }
     .totalBox .value { font-size:36px; font-weight:900; margin-top:6px; letter-spacing:0.6px; }
@@ -144,7 +145,7 @@
       padding:8px 2px;
     }
     .typeRow .label { font-weight:800; color:#0b1220; font-size:13px; }
-    .typeRow .val { font-weight:900; color:var(--accent-2); }
+    .typeRow .val { font-weight:900; color:var(--accent-black); }
 
     /* Events accordion */
     .accordion {
@@ -196,6 +197,13 @@
       padding:10px 12px;
       cursor:pointer;
     }
+    .categoryHeader:hover {
+      background: rgba(15,76,163,0.03);
+    }
+
+    .categoryHeader {
+      transition: background 120ms ease;
+    }
     .categoryHeader b { font-weight:900; }
     .categoryBody { display:none; padding:8px 12px 10px 12px; }
     .categoryPanel.open .categoryBody { display:block; }
@@ -213,7 +221,7 @@
     .eventLeft { display:flex; gap:12px; align-items:center; min-width:0; }
     .badge {
       width:36px; height:36px; border-radius:9px; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:900;
-      background: linear-gradient(180deg, var(--accent), #064a7a);
+      background: linear-gradient(180deg, var(--accent), #7a0606);
     }
     .eventTitle { min-width:0; }
     .eventTitle b { display:block; font-weight:800; font-size:14px; }
@@ -248,16 +256,138 @@
     }
     .toppart{
       display:flex;
-      background-color: #ff0000;
+      background-color: #ffffff;
+    }
+    /* ===== Medal look (blue ribbon on top) ===== */
+
+    /* Base badge stays as your normal badge by default */
+    .badge{
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      line-height: 1;
+      position: relative;
     }
 
+    /* Superscript */
+    .badge sup{
+      font-size: 0.55em;
+      vertical-align: super;
+      margin-left: 1px;
+    }
+    /* --- Medals only: 1/2/3 --- */
+    .badge.place-1,
+    .badge.place-2,
+    .badge.place-3{
+      /* medal disc */
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+
+      /* make room for ribbon above */
+      margin-top: 16px;
+
+      /* depth */
+      box-shadow:
+        inset 0 -2px 0 rgba(0,0,0,0.18),
+        0 6px 14px rgba(0,0,0,0.18);
+
+      position: relative;
+      isolation: isolate;
+      z-index: 2;
+    }
+
+    /* Gold / Silver / Bronze disc */
+    .badge.place-1{
+      background: radial-gradient(circle at 30% 30%, #fff3b0, #facc15 55%, #d97706 100%) !important;
+      color: #1f2937 !important;
+    }
+    .badge.place-2{
+      background: radial-gradient(circle at 30% 30%, #ffffff, #e5e7eb 55%, #9ca3af 100%) !important;
+      color: #1f2937 !important;
+    }
+    .badge.place-3{
+      background: radial-gradient(circle at 30% 30%, #ffd7b0, #fb923c 55%, #9a3412 100%) !important;
+      color: #1f2937 !important;
+    }
+
+    /* --- Blue ribbon (top) --- */
+    /* Two ribbon strips */
+    .badge.place-1::before,
+    .badge.place-2::before,
+    .badge.place-3::before{
+      content:"";
+      position:absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      width: 0;
+      height: 0;
+
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 22px solid #2563eb; /* BLUE triangle */
+      z-index: 0;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+      pointer-events: none;
+    }
+
+
+    .badge.place-1::after,
+    .badge.place-2::after,
+    .badge.place-3::after{
+      content:"";
+      position:absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      width: 0;
+      height: 0;
+
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 12px solid white; /* CUT-OUT */
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Make sure medal/ribbon can overflow row container */
+    .eventRow { overflow: visible !important; }
+
+    /* --- 4th+ remains your normal blue badge --- */
+    .badge.place-4,
+    .badge.place-5,
+    .badge.place-6{
+      border-radius: 10px;
+      background: #403f3f !important;
+      color: #ffffff !important;
+    }
+    .switch-btn,
+    .eventRow,
+    .eventRow * {
+      pointer-events: auto;
+    }
+    .page-footer {
+      margin-top: 48px;
+      padding: 16px 0;
+      text-align: center;
+      font-size: 15px;
+      color: var(--muted);
+      background: transparent;
+    }
   </style>
 </head>
 <body>
-  <div class="toppart">
-    <div class="topbar">
-      <a class="backBtn" href="templates/index.html" id="backBtn" title="Back to index">← Back</a>
-    </div>
+  <div class="topbar">
+    <a class="backBtn" href="templates/index.html" id="backBtn" title="Back to index">← Back</a>
+    <!-- included uploaded image (local path) -->
   </div>
 
   <div class="container" id="app">
@@ -465,7 +595,7 @@
             catPanel.className = 'categoryPanel';
             const catHeader = document.createElement('div');
             catHeader.className = 'categoryHeader';
-            const noCategoryLabel = ['ALL HOUSE', 'MS', 'HS', 'ES', 'EY'];
+            const noCategoryLabel = ['ALL HOUSE', 'MS', 'HS', 'ES', 'EY', 'MS/HS'];
             const upper = String(cat).toUpperCase();
             let catLabel;
             if (cat === 'uncategorized') {
@@ -500,30 +630,41 @@
     }
 
     function makeEventRow(ev){
+      const row = document.createElement('div');
+      row.className = 'eventRow';
+
+      // place -> number (1/2/3/4...)
+      const m = String(ev.place || '').match(/\d+/);
+      const placeNum = m ? parseInt(m[0], 10) : 4; // default to "normal badge" look
+
+      function ordinal(n){
+        if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
+        if (n % 10 === 1) return `${n}<sup>st</sup>`;
+        if (n % 10 === 2) return `${n}<sup>nd</sup>`;
+        if (n % 10 === 3) return `${n}<sup>rd</sup>`;
+        return `${n}<sup>th</sup>`;
+      }
+      const badgeText = ordinal(placeNum);
+
       const total = window._houseTotal || 0;
       const pct = total > 0 ? ((ev.value/total)*100).toFixed(1) + '%' : '0.0%';
 
-      // pull out the numeric place (e.g. "1st" -> "1")
-      const placeMatch = (ev.place || '').match(/\d+/);
-      const badgeText = placeMatch ? placeMatch[0] : (ev.label || '').slice(0,1).toUpperCase();
-
-      const row = document.createElement('div');
-      row.className = 'eventRow';
       row.innerHTML = `
-            <div class="eventLeft">
-              <div class="badge">${escapeHtml(badgeText)}</div>
-              <div class="eventTitle">
-                <b>${escapeHtml(ev.label)}</b>
-                <small>${escapeHtml(ev.type)}${ev.category ? ' · Cat ' + String(ev.category).toUpperCase() : ''}</small>
-              </div>
-            </div>
-            <div class="eventRight">
-              <div class="eventPts">${ev.value.toLocaleString()} pts</div>
-              <div class="eventPct">${pct}</div>
-            </div>
-          `;
+        <div class="eventLeft">
+          <div class="badge place-${placeNum}">${badgeText}</div>
+          <div class="eventTitle">
+            <b>${escapeHtml(ev.label)}</b>
+            <small>${escapeHtml(ev.place || '')}${ev.category ? ' • ' + escapeHtml(ev.category) : ''}</small>
+          </div>
+        </div>
+        <div class="eventRight">
+          <div class="eventPts">${escapeHtml(String(ev.value))} pts</div>
+          <div class="eventPct">${pct}</div>
+        </div>
+      `;
       return row;
     }
+
 
 
     // Utilities
@@ -554,5 +695,9 @@
     window.rebuildJoy = async function(){ init(); };
 
   </script>
+  <footer class="page-footer">
+    Created by Arihaan and Aayan, with design input from Aashi
+  </footer>
 </body>
 </html>
+

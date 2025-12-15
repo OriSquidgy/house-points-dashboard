@@ -2,23 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sports Day House Points</title>
   <link rel="stylesheet" href="../static/styles/style2.css">
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
 </head>
-<div id="mobile-warning" class="mobile-warning hidden">
-  <div class="mobile-warning-card">
-    <strong>Desktop recommended</strong>
-    <p>
-      This view is best experienced on desktop.<br>
-      For mobile, please use <b>Bar View</b>.
-    </p>
-    <button id="dismiss-warning">Got it</button>
-  </div>
-</div>
 <body>
   <header>
-    <div class="title">Sports Day House Points</div>
+    <div class="header-left">
+      <div class="title">Sports Day House Points</div>
+      <img src="../logo.png" alt="BIS Logo" class="header-logo">
+    </div>
     <a href="index.html"><button class="switch-btn">Bar View</button></a>
   </header>
   <div class="wrap">
@@ -26,21 +20,14 @@
       <div id="row" class="row"></div>
     </div>
   </div>
+  <div class="chart-caption">Click the flags!</div>
   <hr class="full-divider">
   <div id="eventResults"></div>
   <script src="../events.js"></script>
   <script src="../data.js"></script>
   <script src="../static/logic2.js"></script>
-  <script>
-    const isMobile = window.matchMedia('(max-width: 820px)').matches;
-    const warning = document.getElementById('mobile-warning');
-
-    if (isMobile) warning?.classList.remove('hidden');
-
-    document.getElementById('dismiss-warning')?.addEventListener('click', () => {
-      warning?.classList.add('hidden');
-    });
-  </script>
-
+  <footer class="page-footer">
+    Created by Arihaan and Aayan, with design input from Aashi
+  </footer>
 </body>
 </html>

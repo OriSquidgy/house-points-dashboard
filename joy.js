@@ -9,6 +9,7 @@ window.EVENTS ={
         "",
         "",
         "",
+        "",
         ""
     ],
     "events": [
@@ -21,7 +22,8 @@ window.EVENTS ={
         "Football",
         "Football",
         "Cricket",
-        "Cricket"
+        "Cricket",
+        "Throwball"
     ],
     "category": [
         "ES",
@@ -33,6 +35,7 @@ window.EVENTS ={
         "MS",
         "HS",
         "ES",
+        "MS/HS",
         "MS/HS"
     ],
     "gender": [
@@ -42,6 +45,7 @@ window.EVENTS ={
         "Mixed",
         "Boys",
         "Girls",
+        "Mixed",
         "Mixed",
         "Mixed",
         "Mixed",
@@ -57,7 +61,8 @@ window.EVENTS ={
         30,
         30,
         50,
-        40
+        40,
+        30
     ],
     "places": [
         "1st",
@@ -69,9 +74,11 @@ window.EVENTS ={
         "3rd",
         "3rd",
         "1st",
-        "2nd"
+        "2nd",
+        "3rd"
     ],
     "types": [
+        "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",
