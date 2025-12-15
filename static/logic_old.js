@@ -104,16 +104,22 @@ function drawChart() {
           borderRadius: 8,
           datalabels: {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             color: '#ffffff',
             anchor: 'end',
             align: 'left',   // inside bar
             offset: -10,     // small padding so it doesn’t touch black bar
 =======
+=======
+>>>>>>> Stashed changes
             clip: isMobile,                 // draw on top
             color: '#ffffff',
             anchor: 'center',            // vertically centered inside segment
             align: isMobile ? 'center' : 'right',              // place near end of coloured segment
             offset: isMobile ? 0 : -8,
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             clamp: true,
             font: ctx => {
@@ -150,6 +156,21 @@ function drawChart() {
           top: 12,
           bottom: 12
         }
+<<<<<<< Updated upstream
+=======
+      },
+
+
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: { font: { size: isMobile ? 13 : 16, weight: '700' }, boxWidth: 18, boxHeight: 12 },
+          align: 'center'
+        },
+        datalabels: { display: true },
+        tooltip: { enabled: true, padding: 12, bodyFont: { size: 14, weight: '600' } }
+>>>>>>> Stashed changes
       },
 
 

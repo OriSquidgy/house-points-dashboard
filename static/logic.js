@@ -56,7 +56,10 @@ function drawChart() {
   if (!ctx) { console.error('2D context not available'); return; }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
   const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
 

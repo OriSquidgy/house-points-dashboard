@@ -58,6 +58,10 @@ window.EVENTS = {
         "",
         "",
         "",
+        "",
+        "",
+        "",
+        "",
         ""
 >>>>>>> Stashed changes
     ],
@@ -103,6 +107,9 @@ window.EVENTS = {
         "Throwball",
         "Throwball",
         "Throwball"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     ],
     "category": [
@@ -363,6 +370,10 @@ window.EVENTS = {
         "1st",
         "2nd",
         "3rd",
+        "4th",
+        "1st",
+        "2nd",
+        "3rd",
         "4th"
 >>>>>>> Stashed changes
     ],
@@ -377,6 +388,10 @@ window.EVENTS = {
         "Culture",
         "Culture",
         "Culture",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
+        "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",

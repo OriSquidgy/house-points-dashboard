@@ -28,6 +28,7 @@ window.EVENTS ={
         "",
         "",
         "",
+        "",
         ""
     ],
     "events": [
@@ -89,6 +90,9 @@ window.EVENTS ={
         40,
         20,
         40
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     ],
     "places": [
@@ -121,6 +125,9 @@ window.EVENTS ={
         "General/Team Sports",
         "General/Team Sports",
         "General/Team Sports",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         "General/Team Sports"
     ]

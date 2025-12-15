@@ -24,6 +24,8 @@ window.addEventListener("DOMContentLoaded", () => {
 =======
   const isMobile = window.matchMedia('(max-width: 520px)').matches;
 
+  const isMobile = window.matchMedia('(max-width: 520px)').matches;
+
   // layout constants
   const poleH   = isMobile ? 320 : 440;
   const ground  = isMobile ? 110 : 130;

@@ -21,6 +21,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Sort by points descending
   data.sort((a, b) => b.points - a.points);
+<<<<<<< Updated upstream
+=======
+
+  const isMobile = window.matchMedia('(max-width: 520px)').matches;
+>>>>>>> Stashed changes
 
   // layout constants
   const poleH   = 440;
@@ -28,12 +33,18 @@ window.addEventListener("DOMContentLoaded", () => {
   const flagH   = 104;
   const topSafe = 40;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const maxPts  = Math.max(1, ...data.map(d => d.total));
 =======
+=======
+>>>>>>> Stashed changes
   const poleOffsetY = isMobile ? 110 : 150;
   const poleWidth = 6;
 
   const GAP_PER_POINT = 7; // 10px gap per point difference
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   const row = document.getElementById('row');
@@ -85,11 +96,14 @@ window.addEventListener("DOMContentLoaded", () => {
     flag.type = 'button';
     flag.style.position = 'absolute';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     flag.style.bottom = (clampedYEarned - flagH / 2 - 150) + 'px';
     // set width/height and styling inline to avoid external overrides
     flag.style.width = '160px';
     flag.style.height = '100px';
 =======
+=======
+>>>>>>> Stashed changes
     flag.style.bottom = (y - flagH / 2 - poleOffsetY) + 'px';
     flag.style.left = `calc(50% + ${poleWidth / 2}px)`;
     flag.style.width = flagW + 'px';
