@@ -55,6 +55,12 @@ function drawChart() {
   const ctx = canvas.getContext('2d');
   if (!ctx) { console.error('2D context not available'); return; }
 
+<<<<<<< Updated upstream
+=======
+  const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
+
+>>>>>>> Stashed changes
   // destroy previous instance if present
   if (window._houseChart && typeof window._houseChart.destroy === 'function') {
     window._houseChart.destroy();
@@ -204,11 +210,12 @@ function drawChart() {
       scales: {
         x: {
           stacked: true,
-          beginAtZero: true,
-          max: maxWithPadding,
+          min: 1300,                 
+          max: maxWithPadding - 75,
           ticks: { font: { size: 14 }, color: '#333', precision: 0 },
           grid: { color: 'rgba(0,0,0,0.06)' }
         },
+
         y: {
           stacked: true,
           ticks: { font: { size: 20, weight: '700' }, color: '#6b6b6b', padding: 12 },
@@ -292,7 +299,23 @@ function drawChart() {
     heading.textContent = "Event Results (most recent first)";
     container.appendChild(heading);
 
+<<<<<<< Updated upstream
     Object.keys(groups).forEach(key => {
+=======
+    // Accordion wrapper (matches peace.html structure)
+    const accordion = document.createElement("section");
+    accordion.className = "accordion";
+    container.appendChild(accordion);
+
+    // Make newest groups appear first (since rows are already sorted newest→oldest,
+    // the first row inside each group is newest; but we also want group ordering by newest)
+    const keys = Object.keys(groups).sort((a, b) => {
+      const aDate = groups[a][0]?.dateObj?.getTime?.() ?? 0;
+      const bDate = groups[b][0]?.dateObj?.getTime?.() ?? 0;
+      return bDate - aDate;
+    });
+    keys.forEach(key => {
+>>>>>>> Stashed changes
       const results = groups[key];
 
       const details = document.createElement("details");
@@ -319,3 +342,29 @@ function drawChart() {
     console.error("Error building event results:", e);
   }
 }
+
+const flagsBtn = document.getElementById("flags-btn");
+const warning = document.getElementById("mobile-warning");
+const dismissBtn = document.getElementById("dismiss-warning");
+
+flagsBtn?.addEventListener("click", () => {
+  const isMobile = window.innerWidth < 768;
+
+  if (isMobile) {
+    // Mobile → show popup
+    warning.classList.remove("hidden");
+  } else {
+    // Desktop → go to flags view
+    window.location.href = "index2.html";
+  }
+});
+
+dismissBtn?.addEventListener("click", () => {
+  warning.classList.add("hidden");
+});
+
+warning?.addEventListener("click", (e) => {
+  if (e.target === warning) {
+    warning.classList.add("hidden");
+  }
+});

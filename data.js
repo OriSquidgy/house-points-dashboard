@@ -6,10 +6,17 @@ window.DATA = {
         "Hope"
     ],
     "totalPoints": [
+<<<<<<< Updated upstream
         500,
         200,
         300,
         50
+=======
+        1385,
+        1425,
+        1420,
+        1440
+>>>>>>> Stashed changes
     ],
     "lostPoints": [
         2,

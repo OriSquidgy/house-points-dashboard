@@ -7,15 +7,40 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <link rel="stylesheet" href="../static/styles/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
 </head>
+<div id="mobile-warning" class="mobile-warning hidden">
+  <div class="mobile-warning-card">
+    <strong>Desktop recommended</strong>
+    <p>
+      This view is best experienced on desktop.<br>
+      For mobile, please use <b>Bar View</b>.
+    </p>
+    <button id="dismiss-warning">Got it</button>
+  </div>
+</div>
 <body>
   <header>
+    <img src="../logo.jpg" alt="House Dashboard Logo" class="header-logo">
     <div class="title">Sports Day House Points</div>
-  <a href="index2.html"><button class="switch-btn">Flags View</button></a>
+    <button class="switch-btn" id="flags-btn">Flags View (Only for desktop)</button>
   </header>
   <main>
+<<<<<<< Updated upstream
     <canvas id="housePointsChart"></canvas>
+=======
+    <div class="chart-wrap">
+      <div class="chart-container">
+        <canvas id="housePointsChart"></canvas>
+        <div class="chart-caption">Click the bars!</div>
+      </div>
+    </div>
+    <hr class="full-divider">
+>>>>>>> Stashed changes
     <section id="eventResults"></section>
+    <footer class="page-footer">
+      Created by Arihaan and Aayan, with design input from Aashi
+    </footer>
   </main>
   <script src="../events.js"></script>
   <script src="../data.js"></script>

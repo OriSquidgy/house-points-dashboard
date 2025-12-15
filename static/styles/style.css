@@ -288,6 +288,7 @@ header .switch-btn:hover {
 }
 
 #eventResults {
+<<<<<<< Updated upstream
   margin: 32px auto 0;
   width: 95%;
   background: #f9fafb;
@@ -295,6 +296,16 @@ header .switch-btn:hover {
   border: 1px solid #e5e7eb;
   padding: 20px 24px;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+=======
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 26px;
+  margin: auto auto;
+  max-width: 1200px;
+
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+>>>>>>> Stashed changes
 }
 
 #eventResults h2 {
@@ -427,3 +438,327 @@ header .switch-btn:hover {
   width: 100% !important;
   height: 100% !important;
 }
+<<<<<<< Updated upstream
+=======
+
+.full-divider {
+  width: 100vw;            /* full browser width */
+  height: 2px; 
+  background: #000000;
+  border: none;
+  margin: 100px auto;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;      /* stretch beyond containing element */
+  margin-right: -50vw;
+}
+
+/* Accordion (copied style language from peace.html) */
+.accordion {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.typePanel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(11,17,32,0.06);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.06);
+}
+
+.typeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.typeHeader:hover { background: rgba(15,76,163,0.03); }
+.typeHeader .title { font-weight: 900; font-size: 15px; }
+.typeHeader .meta { color: #6b7280; font-weight: 700; font-size: 13px; }
+
+.typeBody {
+  padding: 10px 12px 16px 12px;
+  border-top: 1px solid rgba(11,17,32,0.06);
+  display: none;
+}
+.typePanel.open .typeBody { display: block; }
+
+/* Event row */
+.eventRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 6px;
+  border-bottom: 1px dashed rgba(11,17,32,0.08);
+}
+.eventRow:last-child { border-bottom: none; }
+
+.eventLeft { display: flex; gap: 12px; align-items: center; min-width: 0; }
+
+.badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 900;
+  background: linear-gradient(180deg, #0f4ca3, #0b3a78);
+}
+
+.eventTitle b { display: block; font-weight: 800; font-size: 14px; }
+.eventTitle small { color: #6b7280; font-size: 12px; display: block; }
+
+.eventRight { text-align: right; min-width: 96px; }
+.eventPts { font-weight: 900; color: #0b6b4f; }
+
+
+/* Only switch to 4-up grid when the accordion panel is OPEN */
+.typePanel.open .typeBody {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+/* Make each row behave like a card inside the grid (not a full-width list row) */
+.typePanel.open .typeBody .eventRow {
+  width: 100%;
+  border-bottom: none !important;
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,0.06);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+
+  /* keep your inner layout */
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .typePanel.open .typeBody {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .typePanel.open .typeBody {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Medal look (blue ribbon on top) ===== */
+
+/* Base badge stays as your normal badge by default */
+.badge{
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+  position: relative;
+}
+
+/* Superscript */
+.badge sup{
+  font-size: 0.55em;
+  vertical-align: super;
+  margin-left: 1px;
+}
+
+/* --- Medals only: 1/2/3 --- */
+.badge.place-1,
+.badge.place-2,
+.badge.place-3{
+  /* medal disc */
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+
+  /* make room for ribbon above */
+  margin-top: 16px;
+
+  /* depth */
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.18),
+    0 6px 14px rgba(0,0,0,0.18);
+
+  position: relative;
+  isolation: isolate;
+  z-index: 2;
+}
+
+/* Gold / Silver / Bronze disc */
+.badge.place-1{
+  background: radial-gradient(circle at 30% 30%, #fff3b0, #facc15 55%, #d97706 100%) !important;
+  color: #1f2937 !important;
+}
+.badge.place-2{
+  background: radial-gradient(circle at 30% 30%, #ffffff, #e5e7eb 55%, #9ca3af 100%) !important;
+  color: #1f2937 !important;
+}
+.badge.place-3{
+  background: radial-gradient(circle at 30% 30%, #ffd7b0, #fb923c 55%, #9a3412 100%) !important;
+  color: #1f2937 !important;
+}
+
+/* --- Blue ribbon (top) --- */
+/* Two ribbon strips */
+.badge.place-1::before,
+.badge.place-2::before,
+.badge.place-3::before{
+  content:"";
+  position:absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 0;
+  height: 0;
+
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 22px solid #2563eb; /* BLUE triangle */
+  z-index: 0;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+  pointer-events: none;
+}
+
+
+.badge.place-1::after,
+.badge.place-2::after,
+.badge.place-3::after{
+  content:"";
+  position:absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 0;
+  height: 0;
+
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid white; /* CUT-OUT */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Make sure medal/ribbon can overflow row container */
+.eventRow { overflow: visible !important; }
+
+/* --- 4th+ remains your normal blue badge --- */
+.badge.place-4,
+.badge.place-5,
+.badge.place-6{
+  border-radius: 10px;
+  background: #403f3f !important;
+  color: #ffffff !important;
+}
+
+
+/* ===== Responsive chart sizing ===== */
+.chart-wrap { max-width: 1100px; margin: 0 auto; }
+.chart-container { height: 520px; }
+.chart-container canvas { width: 100% !important; height: 100% !important; display: block; }
+
+@media (max-width: 520px){
+  header{
+    height: auto;
+    padding: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 1.25rem;
+  }
+  header .title{
+    flex: 1 1 100%;
+    text-align: left;
+  }
+  header .switch-btn{
+    height: 44px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 0 14px;
+  }
+
+  main{ padding: 14px 12px 20px; }
+  .chart-container{ height: 420px; }
+}
+
+
+/* modal overlay */
+.mobile-warning{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+/* the card */
+.mobile-warning-card{
+  background: #fff;
+  color: #111827;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  padding: 18px 20px;
+  width: min(420px, 92vw);
+  line-height: 1.35;
+}
+
+/* button styling */
+.mobile-warning-card button{
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.mobile-warning.hidden { pointer-events: none; }
+.hidden {
+  display: none;
+}
+
+.chart-caption {
+  font-family: 'Shadows Into Light', cursive;
+  font-size: 50px;
+  color: #000000; /* or whatever fits your theme */
+  margin-top: 5px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.header-logo{
+  height: 70px;
+  width: auto;
+  margin-left: 12px;   /* ← move right */
+}
+
+.page-footer {
+  margin-top: 48px;
+  padding: 16px 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--muted);
+  background: transparent;
+}
+>>>>>>> Stashed changes

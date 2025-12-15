@@ -15,11 +15,24 @@ window.addEventListener("DOMContentLoaded", () => {
 
   data.sort((a, b) => b.points - a.points);
 
+<<<<<<< Updated upstream
   const poleH = 440;
   const ground = 130;
   const flagH = 104;
   const topSafe = 40;
   const maxPts = Math.max(...data.map(d=>d.total));
+=======
+  const isMobile = window.matchMedia('(max-width: 520px)').matches;
+
+  // layout constants
+  const poleH   = isMobile ? 320 : 440;
+  const ground  = isMobile ? 110 : 130;
+  const flagH   = isMobile ? 84  : 104;
+  const flagW   = isMobile ? 130 : 160;
+  const topSafe = 40;
+  const poleOffsetY = isMobile ? 110 : 150;
+  const maxPts  = Math.max(1, ...data.map(d => d.total));
+>>>>>>> Stashed changes
 
   const row = document.getElementById('row');
 
@@ -44,12 +57,59 @@ window.addEventListener("DOMContentLoaded", () => {
     // Real flag
     const flag = document.createElement('div');
     flag.className = 'flag';
+<<<<<<< Updated upstream
     flag.style.backgroundColor = '#' + d.color;
     flag.style.bottom = (Math.min(Math.max(yEarned, minY), maxY) - flagH/2) + 'px';
     flag.style.animationDelay = (idx * 150) + 'ms';
     flag.style.cursor = "pointer";
     flag.addEventListener("click", () => {
       window.location.href = d.link;
+=======
+    flag.type = 'button';
+    flag.setAttribute('aria-label', `${d.house} — ${d.points} points`);
+    // position vertically based on points
+    flag.style.position = 'absolute';
+    flag.style.bottom = (clampedYEarned - flagH / 2 - poleOffsetY) + 'px';
+    // set width/height and styling inline to avoid external overrides
+    flag.style.width = flagW + 'px';
+    flag.style.height = flagH + 'px';
+    flag.style.borderRadius = '12px';
+    flag.style.paddingLeft = '0px';
+    flag.style.display = 'inline-flex';
+    flag.style.alignItems = 'center';
+    flag.style.justifyContent = 'center';
+    flag.style.textAlign = 'center';
+    flag.style.fontWeight = '700';
+    flag.style.color = '#fff';
+    flag.style.boxShadow = '0 18px 30px rgba(2,6,23,0.08)';
+    flag.style.zIndex = '3';
+    flag.style.cursor = 'pointer';
+    flag.style.border = 'none';
+    flag.style.outline = 'none';
+    // background color + subtle overlay
+    flag.style.background = `linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.03)), #${d.color}`;
+
+    // place left edge of flag exactly at the pole's right edge:
+    const offsetFromCenter = poleWidth / 2;
+    flag.style.left = `calc(50% + ${offsetFromCenter}px)`;
+
+    // badge inside flag
+    const badge = document.createElement('div');
+    badge.className = 'flag-badge';
+    badge.textContent = d.points;
+    badge.style.marginLeft = '0px';
+    badge.style.background = 'rgba(255,255,255,0.14)';
+    badge.style.padding = '6px 10px';
+    badge.style.borderRadius = '999px';
+    badge.style.fontWeight = '800';
+    badge.style.color = 'rgba(255,255,255,0.98)';
+    badge.style.boxShadow = '0 6px 12px rgba(2,6,23,0.08)';
+    flag.appendChild(badge);
+
+    // click behaviour
+    flag.addEventListener('click', () => {
+      if (d.link && d.link !== '#') window.location.href = d.link;
+>>>>>>> Stashed changes
     });
     col.appendChild(flag);
 
