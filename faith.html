@@ -408,11 +408,12 @@
   <!-- Chart.js + DataLabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="data.js"></script>
   <script src="faith.js"></script>
   <script>
     Chart.register(ChartDataLabels);
 
-    const KNOWN_TYPES = ['Culture','Track','Field','General/Team Sports','Deco','March-Past','Drill'];
+    const KNOWN_TYPES = ['Culture','Track','Field','Sports','Deco','March-Past','Drill'];
     const CATEGORY_LETTERS = ['a','b','c','d','e','f'];
 
     const houseTotalEl = document.getElementById('houseTotal');
@@ -444,7 +445,7 @@
         let type = typesArr && typesArr[i] ? String(typesArr[i]) : null;
         if (!type) type = KNOWN_TYPES[Math.floor(Math.random()*KNOWN_TYPES.length)];
         let category = catsArr && catsArr[i] ? String(catsArr[i]) : null;
-        if (!category && ['Track','Field','General/Team Sports'].includes(type)) {
+        if (!category && ['Track','Field','Sports'].includes(type)) {
           category = CATEGORY_LETTERS[Math.floor(Math.random()*CATEGORY_LETTERS.length)];
         }
         if (category) category = String(category);
@@ -469,7 +470,7 @@
         'Culture': 'hsl(285,70%,48%)',
         'Track': 'hsl(210,80%,44%)',
         'Field': 'hsl(197,78%,40%)',
-        'General/Team Sports': 'hsl(150,68%,35%)',
+        'Sports': 'hsl(150,68%,35%)',
         'Deco': 'hsl(28,85%,48%)',
         'March-Past': 'hsl(18,85%,46%)',
         'Drill': 'hsl(255,60%,44%)'
@@ -551,6 +552,7 @@
       eventsAccordion.innerHTML = '';
       const types = Object.keys(groups).sort((a,b) => groups[b].reduce((s,i)=>s+i.value,0) - groups[a].reduce((s,i)=>s+i.value,0));
       for (const type of types){
+        const isOther = type === "Other (untracked)";
         const items = groups[type];
         const typePanel = document.createElement('div');
         typePanel.className = 'typePanel';
@@ -559,17 +561,22 @@
         const header = document.createElement('div');
         header.className = 'typeHeader';
         header.innerHTML = `<div class="title">${escapeHtml(type)}</div><div class="meta">${items.length} • ${items.reduce((s,i)=>s+i.value,0)} pts</div>`;
-        header.addEventListener('click', () => {
-          const open = typePanel.classList.toggle('open');
-          // close siblings
-          document.querySelectorAll('.typePanel').forEach(p => { if (p !== typePanel) p.classList.remove('open'); });
-        });
+        if (!isOther) {
+          header.addEventListener('click', () => {
+            typePanel.classList.toggle('open');
+            document.querySelectorAll('.typePanel').forEach(p => { if (p !== typePanel) p.classList.remove('open'); });
+          });
+        } else {
+          header.style.cursor = "default";
+          header.style.opacity = "0.75";
+        }
+
 
         // Body
         const body = document.createElement('div');
         body.className = 'typeBody';
 
-        if (['Track','Field','General/Team Sports'].includes(type)) {
+        if (['Track','Field','Sports'].includes(type)) {
           // group by category
           const byCat = {};
           for (const it of items) {
@@ -670,9 +677,35 @@
     (async function init(){
       const raw = await loadData();
       const paired = preparePaired(raw);
-      const totalHouse = paired.reduce((s,p)=>s+p.value,0);
-      window._houseTotal = totalHouse;
-      houseTotalEl.textContent = totalHouse.toLocaleString();
+
+      // --- TRUE total from data.js (window.DATA) ---
+      const houseName = "Faith";
+      const trueTotal =
+        (window.DATA?.houses && window.DATA?.totalPoints)
+          ? (window.DATA.totalPoints[window.DATA.houses.indexOf(houseName)] ?? 0)
+          : 0;
+
+      // known total from your detailed events
+      const knownTotal = paired.reduce((s,p)=>s+p.value,0);
+
+      // compute untracked
+      const other = Math.max(0, trueTotal - knownTotal);
+
+      // add an "Other" bucket as a synthetic event + type
+      if (other > 0) {
+        paired.push({
+          label: "Other points (no breakdown yet)",
+          value: other,
+          type: "Other (untracked)",
+          category: null,
+          place: ""   // no medal
+        });
+      }
+
+      // IMPORTANT: set HOUSE TOTAL to the TRUE total
+      window._houseTotal = trueTotal;
+      houseTotalEl.textContent = trueTotal.toLocaleString();
+
 
       const groups = groupByType(paired);
       renderBars(groups);

@@ -78,16 +78,16 @@ window.EVENTS ={
         "2nd"
     ],
     "types": [
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports",
-        "General/Team Sports"
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports"
     ]
 };
