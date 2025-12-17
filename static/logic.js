@@ -104,6 +104,8 @@ function drawChart() {
   // padded max so black block never flushes to viewport edge
   const rawMax = Math.max(...earnedData.map((v, i) => v + (lostData[i] || 0)));
   const maxWithPadding = Math.ceil(rawMax * 1.06);
+  const rawMin = Math.min(...earnedData.map((v, i) => v + (lostData[i] || 0)));
+  const minZoom = Math.floor(rawMin * 0.9 / 100) * 100;
 
   // compute maximum font size such that text fits inside the coloured segment width
   function computeMaxFontForSegment(chart, index, text, maxSize, minSize = 10, paddingPx = 12) {
@@ -212,7 +214,7 @@ function drawChart() {
       scales: {
         x: {
           stacked: true,
-          min: 1300,                 
+          min: minZoom,                 
           max: maxWithPadding - 75,
           ticks: { font: { size: 14 }, color: '#333', precision: 0 },
           grid: { color: 'rgba(0,0,0,0.06)' }

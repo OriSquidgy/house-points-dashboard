@@ -236,11 +236,60 @@
       .totalBox { flex:1; }
       .typeSummary { flex:1; }
     }
-    @media (max-width:600px) {
-      .container { margin: 110px 16px 60px; }
-      .backBtn { padding:8px 10px; font-size:13px; }
-      .totalBox .value { font-size:28px; }
+    @media (max-width: 600px) {
+      /* prevent the fixed back button from crushing the title area */
+      .topbar{
+        left: 12px;
+        top: 12px;
+      }
+
+      .container{
+        margin: 92px auto 48px;   /* less huge top gap, but still clears topbar */
+        padding: 0 14px;
+      }
+
+      header.pageHead{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .pageTitle{
+        font-size: 26px;          /* was tiny in desktop, but too tall/awkward on mobile */
+        line-height: 1.05;
+      }
+
+      .pageSub{
+        font-size: 13px;
+        line-height: 1.3;
+      }
+
+      .chartCard{
+        padding: 14px;
+      }
+
+      /* IMPORTANT: on mobile, don’t put total+summary in a row */
+      .chartInner{
+        flex-direction: column;
+      }
+      .summaryArea{
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* chart area height + breathing room */
+      .barsArea{
+        min-height: 300px;
+        padding: 10px;
+      }
+
+      .totalBox .value{
+        font-size: 30px;
+      }
     }
+
     /* ===== Medal look (blue ribbon on top) ===== */
 
     /* Base badge stays as your normal badge by default */
@@ -366,6 +415,55 @@
       color: var(--muted);
       background: transparent;
     }
+
+    .modal.hidden { display:none; }
+
+    .modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.45);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index: 9999;
+      padding: 18px;
+    }
+
+    .modalCard{
+      width: min(520px, 100%);
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 16px 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      border: 1px solid rgba(11,17,32,0.08);
+    }
+
+    .modalTitle{
+      font-weight: 900;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .modalText{
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.35;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .modalBtn{
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #fff;
+      background: #000;
+    }
+    .modalBtn:hover{ transform: translateY(-1px); }
+
   </style>
 </head>
 <body>
@@ -404,6 +502,18 @@
 
     <section class="accordion" id="eventsAccordion" aria-label="Events list"></section>
   </div>
+
+  <div id="otherModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="otherModalTitle">
+    <div class="modalCard">
+      <div class="modalTitle" id="otherModalTitle">About “Other (untracked)”</div>
+      <div class="modalText">
+        We don’t have an exact breakup of these points yet — don’t worry, they aren’t made up.
+        They come from real events that haven’t been entered with full detail.
+      </div>
+      <button id="closeOtherModal" class="modalBtn">Got it</button>
+    </div>
+  </div>
+
 
   <!-- Chart.js + DataLabels -->
   <script src="data.js"></script>
@@ -487,27 +597,32 @@
       const labels = items.map(i => i.type);
       const data = items.map(i => i.total);
       const colors = items.map(i => getColorForType(i.type));
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
 
       // height calculation: ~64px per bar for comfortable spacing
-      const perBar = 64;
-      const targetHeight = Math.max(perBar * labels.length, 220);
+      const perBar = isMobile ? 74 : 64;
+      const targetHeight = Math.max(perBar * labels.length, isMobile ? 280 : 220);
       canvas.style.height = targetHeight + 'px';
 
       if (window._barsChart) try { window._barsChart.destroy(); } catch(e){}
 
       window._barsChart = new Chart(canvas.getContext('2d'), {
         type: 'bar',
-        data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 10, barThickness: Math.min(72, Math.floor(targetHeight / (labels.length * 1.18))) }] },
+        data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 10, barThickness: Math.min(45, Math.floor(targetHeight / (labels.length * 1.18))) }] },
         options: {
           indexAxis: 'y',
           maintainAspectRatio: false,
           responsive: true,
           animation: false,
-          layout: { padding: 8 },
+          layout: { padding: isMobile ? { left: 18, right: 8, top: 8, bottom: 8 } : 8 },
           plugins: {
             legend: { display:false },
             datalabels: {
-              anchor: 'center', align: 'center', color: '#fff', font: { weight:'900', size: 15 }, formatter: v => v
+              anchor: 'center',
+              align: 'center',
+              color: '#fff',
+              font: { weight:'900', size: isMobile ? 13 : 15 },
+              formatter: v => v
             },
             tooltip: {
               callbacks: { label: ctx => `${ctx.label}: ${ctx.raw}` }
@@ -515,7 +630,23 @@
           },
           scales: {
             x: { beginAtZero: true, ticks: { precision:0 }, grid: { display:false }, max: Math.max(1, Math.ceil(Math.max(...data) * 1.08)) },
-            y: { ticks: { color: '#071225', font: { weight:800, size:14 } }, grid: { display:false } }
+            y: {
+              ticks: {
+                color: '#071225',
+                font: { weight: 800, size: isMobile ? 11 : 14 },
+                callback: function(value){
+                  const label = this.getLabelForValue(value);
+                  if (!isMobile) return label;
+
+                  // shorten the worst offender
+                  if (label === "Other (untracked)") return "Other";
+
+                  // optional: truncate anything very long
+                  return label.length > 14 ? label.slice(0, 12) + "…" : label;
+                }
+              },
+              grid: { display:false }
+            }
           }
         },
         plugins: [ChartDataLabels]
@@ -523,16 +654,16 @@
 
       // clicking any bar scrolls to its type panel if present
       canvas.onclick = function(evt){
-        const pts = window._barsChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+        const pts = window._barsChart.getElementsAtEventForMode(
+          evt, 'nearest', { intersect: true }, false
+        );
         if (!pts || !pts.length) return;
+
         const idx = pts[0].index;
         const type = labels[idx];
-        const el = document.querySelector(`[data-type="${cssEscape(type)}"]`);
-        if (el) {
-          // open the panel then scroll
-          el.classList.add('open');
-          el.querySelector('.typeBody')?.scrollIntoView({ behavior:'smooth', block:'start' });
-        }
+
+        // 🔁 Route ALL bar clicks through one gate
+        openType(type);
       };
     }
 
@@ -568,8 +699,14 @@
             document.querySelectorAll('.typePanel').forEach(p => { if (p !== typePanel) p.classList.remove('open'); });
           });
         } else {
-          header.style.cursor = "default";
-          header.style.opacity = "0.75";
+          // Make "Other" clickable, but NOT expandable — open popup instead
+          header.style.cursor = "pointer";
+          header.style.opacity = "0.85";
+
+          header.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openOtherModal();
+          });
         }
 
 
@@ -672,6 +809,22 @@
     // Utilities
     function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+    function openType(type){
+      if (type === "Other (untracked)") {
+        openOtherModal();
+        return;
+      }
+
+      const panel = document.querySelector(`.typePanel[data-type="${CSS.escape(type)}"]`);
+      if (!panel) return;
+
+      panel.classList.add("open");
+      document.querySelectorAll('.typePanel').forEach(p => { if (p !== panel) p.classList.remove('open'); });
+
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+
     // CSS escape helper for query selector usage (simple)
     function cssEscape(s){ return s.replace(/([ !"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g,'\\$1'); }
 
@@ -717,6 +870,29 @@
 
     // expose rebuild function
     window.rebuild = async function(){ init(); };
+
+    const otherModal = document.getElementById("otherModal");
+    const closeOtherModalBtn = document.getElementById("closeOtherModal");
+
+    function openOtherModal(){
+      otherModal.classList.remove("hidden");
+    }
+
+    function closeOtherModal(){
+      otherModal.classList.add("hidden");
+    }
+
+    closeOtherModalBtn.addEventListener("click", closeOtherModal);
+
+    // click outside card closes
+    otherModal.addEventListener("click", (e) => {
+      if (e.target === otherModal) closeOtherModal();
+    });
+
+    // ESC closes
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !otherModal.classList.contains("hidden")) closeOtherModal();
+    });
 
   </script>
   <footer class="page-footer">
