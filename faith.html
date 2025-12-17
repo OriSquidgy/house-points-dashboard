@@ -546,6 +546,7 @@
       const typesArr = Array.isArray(data.types) ? data.types.slice() : null;
       const catsArr = Array.isArray(data.category) ? data.category.slice() : null;
       const placesArr = Array.isArray(data.places)   ? data.places.slice()   : null;
+      const genderArr = Array.isArray(data.gender) ? data.gender.slice() : null;
       const maxLen = Math.max(ev.length, pts.length);
       const out = [];
       for (let i=0;i<maxLen;i++){
@@ -559,7 +560,8 @@
         }
         if (category) category = String(category);
         const place = placesArr && placesArr[i] ? String(placesArr[i]) : '';
-        out.push({ label, value, type, category, place });
+        const gender = genderArr && genderArr[i] ? String(genderArr[i]) : '';
+        out.push({ label, value, type, category, place, gender });
       }
       if (out.length === 0) out.push({ label: 'No events', value: 0, type: KNOWN_TYPES[0], category: null });
       return out;
@@ -790,8 +792,8 @@
         <div class="eventLeft">
           <div class="badge place-${placeNum}">${badgeText}</div>
           <div class="eventTitle">
-            <b>${escapeHtml(ev.label)}</b>
-            <small>${escapeHtml(ev.place || '')}${ev.category ? ' • ' + escapeHtml(ev.category) : ''}</small>
+            <b>${ev.gender ? `${escapeHtml(ev.gender)} ` : ''}
+              ${escapeHtml(ev.label)}</b>
           </div>
         </div>
         <div class="eventRight">
@@ -837,11 +839,13 @@
 
       // --- TRUE total from data.js (window.DATA) ---
       const houseName = "Faith";
-      const trueTotal =
-        (window.DATA?.houses && window.DATA?.totalPoints)
-          ? (window.DATA.totalPoints[window.DATA.houses.indexOf(houseName)] ?? 0)
-          : 0;
+      const idx = window.DATA?.houses?.indexOf(houseName) ?? -1;
 
+      const grossTotal = (idx >= 0) ? (window.DATA.totalPoints?.[idx] ?? 0) : 0;
+      const lostTotal  = (idx >= 0) ? (window.DATA.lostPoints?.[idx] ?? 0) : 0;
+
+      // ✅ Net total that should be displayed on the page
+      const trueTotal = Math.max(0, grossTotal - lostTotal);
       // known total from your detailed events
       const knownTotal = paired.reduce((s,p)=>s+p.value,0);
 
