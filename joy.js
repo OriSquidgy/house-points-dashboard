@@ -87,6 +87,15 @@ window.EVENTS ={
         "",
         "",
         "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
         ""
     ],
     "events": [
@@ -177,7 +186,16 @@ window.EVENTS ={
         "400m",
         "400m",
         "400m",
-        "400m"
+        "400m",
+        "Table Tennis",
+        "Table Tennis",
+        "Table Tennis",
+        "Table Tennis",
+        "Badminton",
+        "Badminton",
+        "Badminton",
+        "Badminton",
+        "Badminton"
     ],
     "category": [
         "ES",
@@ -267,7 +285,16 @@ window.EVENTS ={
         "B",
         "C",
         "C",
-        "C"
+        "C",
+        "MS",
+        "MS",
+        "HS",
+        "HS",
+        "ES",
+        "ES",
+        "MS",
+        "MS",
+        "HS"
     ],
     "gender": [
         "Girls",
@@ -357,7 +384,16 @@ window.EVENTS ={
         "Girls",
         "Boys",
         "Boys",
-        "Girls"
+        "Girls",
+        "Boys",
+        "Girls",
+        "Boys",
+        "Girls",
+        "Boys",
+        "Girls",
+        "Boys",
+        "Girls",
+        "Boys"
     ],
     "points": [
         50,
@@ -447,6 +483,15 @@ window.EVENTS ={
         5,
         10,
         5,
+        15,
+        10,
+        15,
+        10,
+        10,
+        15,
+        5,
+        15,
+        10,
         15
     ],
     "places": [
@@ -537,6 +582,15 @@ window.EVENTS ={
         "3rd",
         "2nd",
         "3rd",
+        "1st",
+        "2nd",
+        "1st",
+        "2nd",
+        "2nd",
+        "1st",
+        "3rd",
+        "1st",
+        "2nd",
         "1st"
     ],
     "types": [
@@ -627,6 +681,15 @@ window.EVENTS ={
         "Track",
         "Track",
         "Track",
-        "Track"
+        "Track",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports",
+        "Sports"
     ]
 };
