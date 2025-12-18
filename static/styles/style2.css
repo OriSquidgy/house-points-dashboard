@@ -567,3 +567,39 @@ body {
   color: #6B7280;
   background: transparent;
 }
+
+.event-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0;
+}
+
+.search-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2937;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-btn i {
+  margin-right: 8px;
+}
+
+.search-bar {
+  margin-bottom: 14px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.hidden {
+  display: none;
+}

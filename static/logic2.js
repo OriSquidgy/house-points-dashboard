@@ -146,6 +146,28 @@ window.addEventListener("DOMContentLoaded", () => {
 
     container.innerHTML = "";
 
+    /* ===============================
+       SEARCH TOOLBAR
+    =============================== */
+    const toolbar = document.createElement("div");
+    toolbar.className = "event-toolbar";
+    toolbar.innerHTML = `
+      <button id="openSearch" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search events</button>
+    `;
+    container.appendChild(toolbar);
+
+    const searchBar = document.createElement("div");
+    searchBar.id = "searchBar";
+    searchBar.className = "search-bar hidden";
+    searchBar.innerHTML = `
+      <input
+        id="eventSearchInput"
+        type="text"
+        placeholder="Search by event, house, category, or gender..."
+      />
+    `;
+    container.appendChild(searchBar);
+
     // Parse dd/mm/yyyy
     const parseDMY = (str) => {
       const [d, m, y] = str.split("/").map(Number);
@@ -265,6 +287,28 @@ window.addEventListener("DOMContentLoaded", () => {
       panel.appendChild(header);
       panel.appendChild(body);
       accordion.appendChild(panel);
+    });
+
+    /* ===============================
+       SEARCH LOGIC
+    =============================== */
+    const panels = Array.from(accordion.querySelectorAll(".typePanel"));
+    const openSearchBtn = document.getElementById("openSearch");
+    const searchInput = document.getElementById("eventSearchInput");
+
+    openSearchBtn.addEventListener("click", () => {
+      searchBar.classList.toggle("hidden");
+      searchInput.value = "";
+      searchInput.focus();
+      panels.forEach(p => p.style.display = "");
+    });
+
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.toLowerCase();
+      panels.forEach(panel => {
+        panel.style.display =
+          panel.innerText.toLowerCase().includes(q) ? "" : "none";
+      });
     });
 
     // helper copied from peace.html pattern

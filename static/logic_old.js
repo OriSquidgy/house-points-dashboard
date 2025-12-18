@@ -265,7 +265,7 @@ function drawChart() {
     const toolbar = document.createElement("div");
     toolbar.className = "event-toolbar";
     toolbar.innerHTML = `
-      <button id="openSearch" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search events</button>
+      <button id="openSearch" class="search-btn">Search events</button>
     `;
     container.appendChild(toolbar);
 

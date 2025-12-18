@@ -19,15 +19,22 @@
       --radius: 14px;
     }
     * { box-sizing: border-box; }
-    html,body{
+    html, body{
       height:100%;
       margin:0;
       font-family: "Montserrat", system-ui, Roboto, Arial, sans-serif;
-      background:var(--bg);
       color:#0b1220;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+
+      /* Patterninja background image */
+      /* background-color: #f6f8fb;
+      background-image: url("faith-pattern.png");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      background-position: 0 0; */
     }
+
 
     /* Top bar with back button */
     .topbar {
@@ -60,7 +67,24 @@
       max-width: 1180px;
       margin: 86px auto 60px;
       padding: 0 20px;
+      background: linear-gradient(
+        to bottom,
+        rgba(246,248,251,0.95),
+        rgba(246,248,251,0.88) 120px,
+        rgba(246,248,251,0.85)
+      );
+      border-radius: 20px;
     }
+
+    body::before{
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(246,248,251,0.5);
+      pointer-events: none;
+      z-index: -1;
+    }
+
 
     /* Big header */
     header.pageHead {
@@ -69,6 +93,7 @@
       justify-content:space-between;
       gap: 18px;
       margin-bottom: 18px;
+      padding-top: 12px;
     }
     .pageTitle {
       margin:0;
@@ -417,7 +442,7 @@
     }
     .page-footer {
       margin-top: 48px;
-      padding: 16px 0;
+      padding: 40px 0;
       text-align: center;
       font-size: 15px;
       color: var(--muted);
@@ -525,8 +550,8 @@
   <!-- Chart.js + DataLabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <script src="data.js?v=18121"></script>
-  <script src="faith.js?v=18121"></script>
+  <script src="data.js?v=18122"></script>
+  <script src="faith.js?v=18122"></script>
   <script>
     Chart.register(ChartDataLabels);
 

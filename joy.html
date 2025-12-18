@@ -478,7 +478,18 @@
       background: #000;
     }
     .modalBtn:hover{ transform: translateY(-1px); }
-
+    .totalValueRow{
+      display: flex;
+      align-items: center;   /* keeps icon aligned nicely with digits */
+      justify-content: center;
+      gap: 10px;
+    }
+    .totalIcon{
+      width: 80px;             /* tweak */
+      height: 80px;
+      object-fit: contain;
+      opacity: 0.9;            /* tweak */
+    }
   </style>
 </head>
 <body>
@@ -505,7 +516,10 @@
         <aside class="summaryArea" aria-hidden="false">
           <div class="totalBox" role="status" aria-live="polite">
             <div class="label">HOUSE TOTAL</div>
-            <div class="value" id="houseTotal">—</div>
+            <div class="value totalValueRow">
+              <span id="houseTotal">—</span>
+              <!-- <img class="totalIcon" src="joy-flag.png" alt=""> -->
+            </div>
           </div>
 
           <div class="typeSummary" aria-label="Type quick totals">
@@ -533,8 +547,8 @@
   <!-- Chart.js + DataLabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <script src="data.js?v=18121"></script>
-  <script src="joy.js?v=18121"></script>
+  <script src="data.js?v=18122"></script>
+  <script src="joy.js?v=18122"></script>
   <script>
     Chart.register(ChartDataLabels);
 
