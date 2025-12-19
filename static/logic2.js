@@ -208,6 +208,23 @@ window.addEventListener("DOMContentLoaded", () => {
       groups[key].push(r);
     });
 
+    const CATEGORY_ORDER = [
+      "A","B","C","D","E","F",
+      "EY","ES","MS","HS","MS/HS","All House"
+    ];
+
+    const categoryBuckets = {};
+    CATEGORY_ORDER.forEach(c => categoryBuckets[c] = []);
+
+    Object.entries(groups).forEach(([key, events]) => {
+      const sample = events[0];
+      const cat = sample.category;
+
+      if (CATEGORY_ORDER.includes(cat)) {
+        categoryBuckets[cat].push({ key, events });
+      }
+    });
+
     const heading = document.createElement("h2");
     heading.textContent = "Event Results (events are updated after their respective prize distribution)";
     container.appendChild(heading);
@@ -225,21 +242,24 @@ window.addEventListener("DOMContentLoaded", () => {
       return bDate - aDate;
     });
 
-    keys.forEach(key => {
-      const results = groups[key];
+    CATEGORY_ORDER.forEach(cat => {
+      const items = categoryBuckets[cat];
+      if (!items || items.length === 0) return;
 
       const panel = document.createElement("div");
-      panel.className = "typePanel";     // same classname as peace.html
+      panel.className = "typePanel categoryPanel";
 
       const header = document.createElement("div");
       header.className = "typeHeader";
       header.innerHTML = `
-        <div class="title">${escapeHtml(key)}</div>
+        <div class="title">
+          ${cat === "All House" ? "All House" : `Category ${cat}`}
+        </div>
+        <div class="meta">${items.length} events</div>
       `;
 
       header.addEventListener("click", () => {
-        // open/close this, close siblings (accordion behavior)
-        const open = panel.classList.toggle("open");
+        panel.classList.toggle("open");
         accordion.querySelectorAll(".typePanel").forEach(p => {
           if (p !== panel) p.classList.remove("open");
         });
@@ -248,46 +268,58 @@ window.addEventListener("DOMContentLoaded", () => {
       const body = document.createElement("div");
       body.className = "typeBody";
 
-      // Build rows like peace.html (badge left, points right)
-      results.forEach(r => {
-        const row = document.createElement("div");
-        row.className = "eventRow";
+      // 👇 THIS is your existing event-card logic, unchanged
+      items.forEach(({ key, events }) => {
+        const subPanel = document.createElement("div");
+        subPanel.className = "typePanel eventPanel";
 
-        const placeMatch = String(r.place || "").match(/\d+/);
-        const placeNum = placeMatch ? parseInt(placeMatch[0], 10) : null;
+        const subHeader = document.createElement("div");
+        subHeader.className = "typeHeader";
+        subHeader.innerHTML = `<div class="title">${escapeHtml(key)}</div>`;
 
-        function ordinal(n) {
-          if (!n) return "?";
-          if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
-          switch (n % 10) {
-            case 1: return `${n}<sup>st</sup>`;
-            case 2: return `${n}<sup>nd</sup>`;
-            case 3: return `${n}<sup>rd</sup>`;
-            default: return `${n}<sup>th</sup>`;
-          }
-        }
+        subHeader.addEventListener("click", (e) => {
+        e.stopPropagation(); // 🔑 prevent category from toggling
+        subPanel.classList.toggle("open");
 
-        const badgeText = ordinal(placeNum);
+        // close sibling event panels inside SAME category
+        body.querySelectorAll(".eventPanel").forEach(p => {
+          if (p !== subPanel) p.classList.remove("open");
+        });
+      });
 
-        row.innerHTML = `
-          <div class="eventLeft">
-            <div class="badge place-${placeNum}">${badgeText}</div>
-            <div class="eventTitle">
-              <b>${escapeHtml(r.house)}</b>
+
+        const subBody = document.createElement("div");
+        subBody.className = "typeBody";
+
+        events.forEach(r => {
+          const row = document.createElement("div");
+          row.className = "eventRow";
+
+          const placeNum = parseInt(r.place);
+          const badgeText = ordinal(placeNum);
+
+          row.innerHTML = `
+            <div class="eventLeft">
+              <div class="badge place-${placeNum}">${badgeText}</div>
+              <div class="eventTitle"><b>${escapeHtml(r.house)}</b></div>
             </div>
-          </div>
-          <div class="eventRight">
-            <div class="eventPts">${escapeHtml(String(r.points))} pts</div>
-          </div>
-        `;
+            <div class="eventRight">
+              <div class="eventPts">${r.points} pts</div>
+            </div>
+          `;
+          subBody.appendChild(row);
+        });
 
-        body.appendChild(row);
+        subPanel.appendChild(subHeader);
+        subPanel.appendChild(subBody);
+        body.appendChild(subPanel);
       });
 
       panel.appendChild(header);
       panel.appendChild(body);
       accordion.appendChild(panel);
     });
+
 
     /* ===============================
        SEARCH LOGIC
@@ -311,6 +343,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+
     // helper copied from peace.html pattern
     function escapeHtml(s){
       return String(s || "")
@@ -324,4 +357,51 @@ window.addEventListener("DOMContentLoaded", () => {
   } catch (e) {
     console.error("Error building event results:", e);
   }
+});
+
+function ordinal(n) {
+  if (!n || isNaN(n)) return "";
+  if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
+  switch (n % 10) {
+    case 1: return `${n}<sup>st</sup>`;
+    case 2: return `${n}<sup>nd</sup>`;
+    case 3: return `${n}<sup>rd</sup>`;
+    default: return `${n}<sup>th</sup>`;
+  }
+}
+
+// ===== Feedback side panel =====
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("fb-toggle");
+  const panel = document.getElementById("fb-panel");
+  const close = document.getElementById("fb-close");
+  const backdrop = document.getElementById("fb-backdrop");
+
+  // Safety check (important if some pages don't have the panel)
+  if (!toggle || !panel || !close || !backdrop) return;
+
+  function openPanel() {
+    panel.classList.add("is-open");
+    backdrop.hidden = false;
+    toggle.setAttribute("aria-expanded", "true");
+    panel.setAttribute("aria-hidden", "false");
+  }
+
+  function closePanel() {
+    panel.classList.remove("is-open");
+    backdrop.hidden = true;
+    toggle.setAttribute("aria-expanded", "false");
+    panel.setAttribute("aria-hidden", "true");
+  }
+
+  toggle.addEventListener("click", () => {
+    panel.classList.contains("is-open") ? closePanel() : openPanel();
+  });
+
+  close.addEventListener("click", closePanel);
+  backdrop.addEventListener("click", closePanel);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePanel();
+  });
 });

@@ -353,6 +353,18 @@ body {
 
 .eventLeft { display: flex; gap: 12px; align-items: center; min-width: 0; }
 
+.badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 900;
+  background: linear-gradient(180deg, #0f4ca3, #0b3a78);
+}
+
 .eventTitle b { display: block; font-weight: 800; font-size: 14px; }
 .eventTitle small { color: #6b7280; font-size: 12px; display: block; }
 
@@ -360,17 +372,45 @@ body {
 .eventPts { font-weight: 900; color: #0b6b4f; }
 
 
-/* Only switch to 4-up grid when the accordion panel is OPEN */
-.typePanel.open .typeBody {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(180px, 1fr));
-  gap: 16px;
+/* ===== Accordion visibility (clean + mobile-safe) ===== */
+
+/* hide all bodies by default */
+.typePanel > .typeBody { display: none; }
+
+/* category opens to show its list of events */
+.categoryPanel.open > .typeBody{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 14px;
 }
 
-/* Make each row behave like a card inside the grid (not a full-width list row) */
-.typePanel.open .typeBody .eventRow {
-  width: 100%;
-  border-bottom: none !important;
+/* event opens to show medal cards */
+.eventPanel.open > .typeBody{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+/* phones/tablets: ALWAYS 1 column (prevents clipping) */
+@media (max-width: 760px){
+  .eventPanel.open > .typeBody{
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* allow grid items to shrink instead of overflow */
+.eventPanel.open > .typeBody .eventRow{
+  min-width: 0;
+  gap: 12px;
+}
+
+.eventPanel.open > .typeBody{
+  gap: 12px;               /* spacing between rank cards */
+}
+
+.eventPanel.open > .typeBody .eventRow{
+  border-bottom: none !important;      /* remove dashed separators */
   border-radius: 14px;
   padding: 14px 16px;
   background: #fff;
@@ -378,21 +418,9 @@ body {
   box-shadow: 0 8px 20px rgba(15,23,42,0.08);
 
   /* keep your inner layout */
-  display: flex !important;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-/* Responsive */
-@media (max-width: 1000px) {
-  .typePanel.open .typeBody {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 520px) {
-  .typePanel.open .typeBody {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ===== Medal look (blue ribbon on top) ===== */
@@ -602,4 +630,73 @@ body {
 
 .hidden {
   display: none;
+}
+
+/* Feedback toggle button */
+.fb-toggle{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9998;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+/* Backdrop (for mobile / focus) */
+.fb-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 9997;
+}
+
+/* Side panel */
+.fb-panel{
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(420px, 92vw);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  box-shadow: -20px 0 60px rgba(0,0,0,0.18);
+  transform: translateX(105%);
+  transition: transform 220ms ease;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+
+.fb-panel.is-open{
+  transform: translateX(0);
+}
+
+.fb-panel__header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.fb-panel__title{
+  font-weight: 800;
+}
+
+.fb-panel__close{
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.fb-panel__frame{
+  width: 100%;
+  height: 100%;
+  border: 0;
 }

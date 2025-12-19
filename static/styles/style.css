@@ -477,7 +477,6 @@ header .switch-btn:hover {
   border-top: 1px solid rgba(11,17,32,0.06);
   display: none;
 }
-.typePanel.open .typeBody { display: block; }
 
 /* Event row */
 .eventRow {
@@ -511,17 +510,45 @@ header .switch-btn:hover {
 .eventPts { font-weight: 900; color: #0b6b4f; }
 
 
-/* Only switch to 4-up grid when the accordion panel is OPEN */
-.typePanel.open .typeBody {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(180px, 1fr));
-  gap: 16px;
+/* ===== Accordion visibility (clean + mobile-safe) ===== */
+
+/* hide all bodies by default */
+.typePanel > .typeBody { display: none; }
+
+/* category opens to show its list of events */
+.categoryPanel.open > .typeBody{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 14px;
 }
 
-/* Make each row behave like a card inside the grid (not a full-width list row) */
-.typePanel.open .typeBody .eventRow {
-  width: 100%;
-  border-bottom: none !important;
+/* event opens to show medal cards */
+.eventPanel.open > .typeBody{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+/* phones/tablets: ALWAYS 1 column (prevents clipping) */
+@media (max-width: 760px){
+  .eventPanel.open > .typeBody{
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* allow grid items to shrink instead of overflow */
+.eventPanel.open > .typeBody .eventRow{
+  min-width: 0;
+  gap: 12px;
+}
+
+.eventPanel.open > .typeBody{
+  gap: 12px;               /* spacing between rank cards */
+}
+
+.eventPanel.open > .typeBody .eventRow{
+  border-bottom: none !important;      /* remove dashed separators */
   border-radius: 14px;
   padding: 14px 16px;
   background: #fff;
@@ -529,21 +556,9 @@ header .switch-btn:hover {
   box-shadow: 0 8px 20px rgba(15,23,42,0.08);
 
   /* keep your inner layout */
-  display: flex !important;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-/* Responsive */
-@media (max-width: 1000px) {
-  .typePanel.open .typeBody {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 520px) {
-  .typePanel.open .typeBody {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ===== Medal look (blue ribbon on top) ===== */
@@ -650,6 +665,7 @@ header .switch-btn:hover {
 /* Make sure medal/ribbon can overflow row container */
 .eventRow { overflow: visible !important; }
 
+
 /* --- 4th+ remains your normal blue badge --- */
 .badge.place-4,
 .badge.place-5,
@@ -728,9 +744,9 @@ header .switch-btn:hover {
 
 .chart-caption {
   font-family: 'Shadows Into Light', cursive;
-  font-size: 50px;
+  font-size: 40px;
   color: #000000; /* or whatever fits your theme */
-  margin-top: 5px;
+  margin-top: 10px;
   text-align: center;
   opacity: 0.9;
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Sports Day House Points</title>
-  <link rel="stylesheet" href="../static/styles/style2.css?v=19122">
+  <link rel="stylesheet" href="../static/styles/style2.css?v=19123">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -14,7 +14,7 @@
       <div class="title">Sports Day House Points</div>
       <img src="../logo.png" alt="BIS Logo" class="header-logo">
     </div>
-    <a href="index.html?v=19122"><button class="switch-btn">Bar View</button></a>
+    <a href="index.html?v=19123"><button class="switch-btn">Bar View</button></a>
   </header>
   <div class="wrap">
     <div class="scene">
@@ -24,11 +24,32 @@
   <div class="chart-caption">Click the flags!</div>
   <hr class="full-divider">
   <div id="eventResults"></div>
-  <script src="../events.js?v=19122"></script>
-  <script src="../data.js?v=19122"></script>
-  <script src="../static/logic2.js?v=19122"></script>
+  <script src="../events.js?v=19123"></script>
+  <script src="../data.js?v=19123"></script>
+  <script src="../static/logic2.js?v=19123"></script>
   <footer class="page-footer">
     Created by Arihaan and Aayan, with design input from Aashi
   </footer>
+  <!-- Feedback side panel -->
+  <button id="fb-toggle" class="fb-toggle" aria-controls="fb-panel" aria-expanded="false">
+    Have feedback or a bug?
+  </button>
+
+  <aside id="fb-panel" class="fb-panel" aria-hidden="true">
+    <div class="fb-panel__header">
+      <div class="fb-panel__title">Feedback / Bug report</div>
+      <button id="fb-close" class="fb-panel__close" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Option A: Embed the form -->
+    <iframe
+      class="fb-panel__frame"
+      src="https://docs.google.com/forms/d/e/1FAIpQLSdj3fxqXUJqpSOwl9oufxvHsmx5KT_Q-7ERpV3QJSUF3as5zw/viewform?embedded=true"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </aside>
+
+  <div id="fb-backdrop" class="fb-backdrop" hidden></div>
 </body>
 </html>

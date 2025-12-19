@@ -49,6 +49,55 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(drawChart, 20);
 });
 
+const houseIcons = {
+  Faith: new Image(),
+  Joy: new Image(),
+  Hope: new Image(),
+  Peace: new Image()
+};
+
+houseIcons.Faith.src = "../static/icons/faith-flag.png";
+houseIcons.Joy.src   = "../static/icons/joy-flag.png";
+houseIcons.Hope.src  = "../static/icons/hope-flag.png";
+houseIcons.Peace.src = "../static/icons/peace-flag.png";
+
+// Debug: log loading problems
+Object.entries(houseIcons).forEach(([name, img]) => {
+  img.onload  = () => console.log("Loaded icon:", name, img.naturalWidth, img.naturalHeight);
+  img.onerror = () => console.log("FAILED to load icon:", name, img.src);
+});
+
+const yAxisIconPlugin = {
+  id: "yAxisIcons",
+  afterDraw(chart) {
+    const { ctx, scales: { y }, chartArea } = chart;
+    if (!y || !chartArea) return;
+
+    ctx.save();
+
+    const targetH = 50;      // icon height (try 22–30)
+    const gap = 100;          // space between icon and the plot area
+
+    y.ticks.forEach((tick, i) => {
+      const label = String(tick.label).trim();
+      const img = houseIcons[label];
+      if (!img || !img.complete || img.naturalWidth === 0) return;
+
+      const ratio = img.naturalWidth / img.naturalHeight;
+      const targetW = targetH * ratio;
+
+      const yPos = y.getPixelForTick(i);
+
+      // Draw just left of the plot area (requires layout.padding.left big enough)
+      const x = chartArea.left - targetW - gap;
+
+      ctx.drawImage(img, x, yPos - targetH / 2, targetW, targetH);
+    });
+
+    ctx.restore();
+  }
+};
+
 function drawChart() {
   const canvas = document.getElementById('housePointsChart');
   if (!canvas) { console.error('Canvas not found'); return; }
@@ -193,7 +242,7 @@ function drawChart() {
       animation: false,
       layout: {
         padding: {
-          left: isMobile ? 10 : 24,
+          left: isMobile ? 10 : 90,
           right: isMobile ? 18 : 96,
           top: 12,
           bottom: 12
@@ -241,7 +290,10 @@ function drawChart() {
         chart.data.datasets.forEach(ds => { if (ds._computedFontSizes) ds._computedFontSizes = {}; });
         chart.update();
       }
-    }
+    },
+
+    plugins: [yAxisIconPlugin]
+
   });
 
   // Ensure toggles reflect dataset visibility initially
@@ -321,6 +373,23 @@ function drawChart() {
       groups[key].push(r);
     });
 
+    const CATEGORY_ORDER = [
+      "A","B","C","D","E","F",
+      "EY","ES","MS","HS","MS/HS","All House"
+    ];
+
+    const categoryBuckets = {};
+    CATEGORY_ORDER.forEach(c => categoryBuckets[c] = []);
+
+    Object.entries(groups).forEach(([key, events]) => {
+      const sample = events[0];
+      const cat = sample.category;
+
+      if (CATEGORY_ORDER.includes(cat)) {
+        categoryBuckets[cat].push({ key, events });
+      }
+    });
+
     const heading = document.createElement("h2");
     heading.textContent = "Event Results (events are updated after their respective prize distribution)";
     container.appendChild(heading);
@@ -338,21 +407,24 @@ function drawChart() {
       return bDate - aDate;
     });
 
-    keys.forEach(key => {
-      const results = groups[key];
+    CATEGORY_ORDER.forEach(cat => {
+      const items = categoryBuckets[cat];
+      if (!items || items.length === 0) return;
 
       const panel = document.createElement("div");
-      panel.className = "typePanel";     // same classname as peace.html
+      panel.className = "typePanel categoryPanel";
 
       const header = document.createElement("div");
       header.className = "typeHeader";
       header.innerHTML = `
-        <div class="title">${escapeHtml(key)}</div>
+        <div class="title">
+          ${cat === "All House" ? "All House" : `Category ${cat}`}
+        </div>
+        <div class="meta">${items.length} events</div>
       `;
 
       header.addEventListener("click", () => {
-        // open/close this, close siblings (accordion behavior)
-        const open = panel.classList.toggle("open");
+        panel.classList.toggle("open");
         accordion.querySelectorAll(".typePanel").forEach(p => {
           if (p !== panel) p.classList.remove("open");
         });
@@ -361,46 +433,58 @@ function drawChart() {
       const body = document.createElement("div");
       body.className = "typeBody";
 
-      // Build rows like peace.html (badge left, points right)
-      results.forEach(r => {
-        const row = document.createElement("div");
-        row.className = "eventRow";
+      // 👇 THIS is your existing event-card logic, unchanged
+      items.forEach(({ key, events }) => {
+        const subPanel = document.createElement("div");
+        subPanel.className = "typePanel eventPanel";
 
-        const placeMatch = String(r.place || "").match(/\d+/);
-        const placeNum = placeMatch ? parseInt(placeMatch[0], 10) : null;
+        const subHeader = document.createElement("div");
+        subHeader.className = "typeHeader";
+        subHeader.innerHTML = `<div class="title">${escapeHtml(key)}</div>`;
 
-        function ordinal(n) {
-          if (!n) return "?";
-          if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
-          switch (n % 10) {
-            case 1: return `${n}<sup>st</sup>`;
-            case 2: return `${n}<sup>nd</sup>`;
-            case 3: return `${n}<sup>rd</sup>`;
-            default: return `${n}<sup>th</sup>`;
-          }
-        }
+        subHeader.addEventListener("click", (e) => {
+        e.stopPropagation(); // 🔑 prevent category from toggling
+        subPanel.classList.toggle("open");
 
-        const badgeText = ordinal(placeNum);
+        // close sibling event panels inside SAME category
+        body.querySelectorAll(".eventPanel").forEach(p => {
+          if (p !== subPanel) p.classList.remove("open");
+        });
+      });
 
-        row.innerHTML = `
-          <div class="eventLeft">
-            <div class="badge place-${placeNum}">${badgeText}</div>
-            <div class="eventTitle">
-              <b>${escapeHtml(r.house)}</b>
+
+        const subBody = document.createElement("div");
+        subBody.className = "typeBody";
+
+        events.forEach(r => {
+          const row = document.createElement("div");
+          row.className = "eventRow";
+
+          const placeNum = parseInt(r.place);
+          const badgeText = ordinal(placeNum);
+
+          row.innerHTML = `
+            <div class="eventLeft">
+              <div class="badge place-${placeNum}">${badgeText}</div>
+              <div class="eventTitle"><b>${escapeHtml(r.house)}</b></div>
             </div>
-          </div>
-          <div class="eventRight">
-            <div class="eventPts">${escapeHtml(String(r.points))} pts</div>
-          </div>
-        `;
+            <div class="eventRight">
+              <div class="eventPts">${r.points} pts</div>
+            </div>
+          `;
+          subBody.appendChild(row);
+        });
 
-        body.appendChild(row);
+        subPanel.appendChild(subHeader);
+        subPanel.appendChild(subBody);
+        body.appendChild(subPanel);
       });
 
       panel.appendChild(header);
       panel.appendChild(body);
       accordion.appendChild(panel);
     });
+
 
     /* ===============================
        SEARCH LOGIC
@@ -465,6 +549,18 @@ warning?.addEventListener("click", (e) => {
     warning.classList.add("hidden");
   }
 });
+
+function ordinal(n) {
+  if (!n || isNaN(n)) return "";
+  if (n % 100 >= 11 && n % 100 <= 13) return `${n}<sup>th</sup>`;
+  switch (n % 10) {
+    case 1: return `${n}<sup>st</sup>`;
+    case 2: return `${n}<sup>nd</sup>`;
+    case 3: return `${n}<sup>rd</sup>`;
+    default: return `${n}<sup>th</sup>`;
+  }
+}
+
 
 // ===== Feedback side panel =====
 document.addEventListener("DOMContentLoaded", () => {
