@@ -445,7 +445,7 @@ const warning = document.getElementById("mobile-warning");
 const dismissBtn = document.getElementById("dismiss-warning");
 
 flagsBtn?.addEventListener("click", () => {
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
   if (isMobile) {
     // Mobile → show popup
@@ -464,4 +464,40 @@ warning?.addEventListener("click", (e) => {
   if (e.target === warning) {
     warning.classList.add("hidden");
   }
+});
+
+// ===== Feedback side panel =====
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("fb-toggle");
+  const panel = document.getElementById("fb-panel");
+  const close = document.getElementById("fb-close");
+  const backdrop = document.getElementById("fb-backdrop");
+
+  // Safety check (important if some pages don't have the panel)
+  if (!toggle || !panel || !close || !backdrop) return;
+
+  function openPanel() {
+    panel.classList.add("is-open");
+    backdrop.hidden = false;
+    toggle.setAttribute("aria-expanded", "true");
+    panel.setAttribute("aria-hidden", "false");
+  }
+
+  function closePanel() {
+    panel.classList.remove("is-open");
+    backdrop.hidden = true;
+    toggle.setAttribute("aria-expanded", "false");
+    panel.setAttribute("aria-hidden", "true");
+  }
+
+  toggle.addEventListener("click", () => {
+    panel.classList.contains("is-open") ? closePanel() : openPanel();
+  });
+
+  close.addEventListener("click", closePanel);
+  backdrop.addEventListener("click", closePanel);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePanel();
+  });
 });

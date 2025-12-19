@@ -22,7 +22,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Sort by points descending
   data.sort((a, b) => b.points - a.points);
 
-  const isMobile = window.matchMedia('(max-width: 520px)').matches;
+  const isMobile = window.matchMedia('(pointer: coarse)').matches;
 
   // layout constants
   const poleH   = isMobile ? 320 : 440;

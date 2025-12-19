@@ -445,7 +445,7 @@ const warning = document.getElementById("mobile-warning");
 const dismissBtn = document.getElementById("dismiss-warning");
 
 flagsBtn?.addEventListener("click", () => {
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
   if (isMobile) {
     // Mobile → show popup

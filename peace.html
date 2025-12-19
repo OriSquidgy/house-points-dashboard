@@ -516,8 +516,8 @@
 
 
   <!-- Chart.js + DataLabels -->
-  <script src="data.js?v=18123"></script>
-  <script src="peace.js?v=18123"></script>
+  <script src="data.js?v=19122"></script>
+  <script src="peace.js?v=19122"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
@@ -599,7 +599,7 @@
       const labels = items.map(i => i.type);
       const data = items.map(i => i.total);
       const colors = items.map(i => getColorForType(i.type));
-      const isMobile = window.matchMedia("(max-width: 600px)").matches;
+      const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
       // height calculation: ~64px per bar for comfortable spacing
       const perBar = isMobile ? 74 : 64;

@@ -12,10 +12,10 @@ window.DATA = {
         1670
     ],
     "lostPoints": [
-        25,
+        30,
+        10,
         5,
-        5,
-        5
+        15
     ],
     "links": {
         "Joy": "../joy.html",
