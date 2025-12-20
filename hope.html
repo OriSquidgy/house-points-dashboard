@@ -518,12 +518,13 @@
   <!-- Chart.js + DataLabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <script src="data.js?v=20122"></script>
-  <script src="hope.js?v=20122"></script>
+  <script src="data.js?v=20123"></script>
+  <script src="hope.js?v=20123"></script>
   <script>
     Chart.register(ChartDataLabels);
 
     const KNOWN_TYPES = ['Culture','Track','Field','Sports','Deco','March-Past','Drill'];
+    const noGenderLabel = ['Drill', 'Deco', 'March Past']
     const CATEGORY_LETTERS = ['a','b','c','d','e','f'];
 
     const houseTotalEl = document.getElementById('houseTotal');
@@ -791,8 +792,11 @@
         <div class="eventLeft">
           <div class="badge place-${placeNum}">${badgeText}</div>
           <div class="eventTitle">
-            <b>${ev.gender ? `${escapeHtml(ev.gender)} ` : ''}
-              ${escapeHtml(ev.label)}</b>
+            <b>${
+              noGenderLabel.includes(ev.type)
+                ? escapeHtml(ev.label)
+                : `${ev.gender ? escapeHtml(ev.gender) + ' ' : ''}${escapeHtml(ev.label)}`
+            }</b>
           </div>
         </div>
         <div class="eventRight">

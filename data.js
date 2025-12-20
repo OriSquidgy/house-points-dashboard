@@ -6,10 +6,10 @@ window.DATA = {
         "Hope"
     ],
     "totalPoints": [
-        2148,
-        2033,
-        2051,
-        2124
+        2340,
+        2191,
+        2226,
+        2273
     ],
     "lostPoints": [
         30,

@@ -123,6 +123,9 @@ window.EVENTS ={
         "",
         "",
         "",
+        "",
+        "",
+        "",
         ""
     ],
     "events": [
@@ -249,7 +252,10 @@ window.EVENTS ={
         "Relay",
         "Relay",
         "Tug of War",
-        "8x100m Relay"
+        "8x100m Relay",
+        "Drill",
+        "Deco",
+        "March Past"
     ],
     "category": [
         "ES",
@@ -375,7 +381,10 @@ window.EVENTS ={
         "Grade 2",
         "Grade 3",
         "All House",
-        "HS"
+        "HS",
+        "All House",
+        "All House",
+        "All House"
     ],
     "gender": [
         "Girls",
@@ -497,6 +506,9 @@ window.EVENTS ={
         "Boys",
         "Boys",
         "Girls",
+        "Mixed",
+        "Mixed",
+        "Mixed",
         "Mixed",
         "Mixed",
         "Mixed",
@@ -627,7 +639,10 @@ window.EVENTS ={
         20,
         30,
         40,
-        30
+        30,
+        40,
+        39,
+        44
     ],
     "places": [
         "2nd",
@@ -753,7 +768,10 @@ window.EVENTS ={
         "2nd",
         "1st",
         "2nd",
-        "4th"
+        "4th",
+        "2nd",
+        "4th",
+        "3rd"
     ],
     "types": [
         "Sports",
@@ -879,6 +897,9 @@ window.EVENTS ={
         "Track",
         "Track",
         "Sports",
-        "Track"
+        "Track",
+        "Drill",
+        "Deco",
+        "March Past"
     ]
 };
