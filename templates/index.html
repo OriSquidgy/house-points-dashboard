@@ -69,6 +69,40 @@
   </aside>
 
   <div id="fb-backdrop" class="fb-backdrop" hidden></div>
+  <div id="popup-overlay">
+    <div id="popup-box">
+      <h2>Note about Drill, Deco, and March Past</h2>
+      <p>We noticed that everybody thought that winning drill gets you 50 points, and that 2nd, 3rd and 4th give you 40, 30, and 20 respectively. However, after talking with the sports teachers, it turns out that your points are your score for that event. For example, if the judges score a house 43/50 in their drill, they will receive 43 points. Hope this prevents confusion!</p>
+      <button id="close-popup">Close</button>
+    </div>
+  </div>
+  <script>
+    document.getElementById("close-popup").onclick = () => {
+      document.getElementById("popup-overlay").style.display = "none";
+    };
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const popup = document.getElementById("popup-overlay");
+      const closeBtn = document.getElementById("close-popup");
+
+      closeBtn.addEventListener("click", () => {
+        // Hide popup
+        popup.style.display = "none";
+
+        // 🎉 Confetti trigger (ON CLOSE, not on load)
+        confetti({
+          particleCount: 1000,          // more pieces
+          spread: 140,                  // wider burst
+          startVelocity: 55,           // stronger pop
+          scalar: 1.6,                 // 🔥 makes each piece bigger
+          gravity: 0.9,                // heavier fall
+          origin: { y: 0.55 },
+          colors: ["#dc2626", "#b91c1c", "#ef4444"]
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>

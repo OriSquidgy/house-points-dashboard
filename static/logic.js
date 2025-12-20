@@ -597,15 +597,3 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") closePanel();
   });
 });
-
-window.addEventListener("load", () => {
-  confetti({
-    particleCount: 1000,          // more pieces
-    spread: 140,                  // wider burst
-    startVelocity: 55,           // stronger pop
-    scalar: 1.6,                 // 🔥 makes each piece bigger
-    gravity: 0.9,                // heavier fall
-    origin: { y: 0.55 },
-    colors: ["#dc2626", "#b91c1c", "#ef4444"]
-  });
-});
