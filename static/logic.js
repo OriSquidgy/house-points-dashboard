@@ -375,7 +375,7 @@ function drawChart() {
 
     const CATEGORY_ORDER = [
       "A","B","C","D","E","F",
-      "EY","ES","MS","HS","MS/HS","All House"
+      "EY","ES","MS","HS","MS/HS","All House", "PP Group A", "PP Group B", "LKG Group A", "LKG Group B", "LKG Group C", "LKG Group D", "UKG Group A", "UKG Group B", "UKG Group C", "G1 Group A", "G1 Group B", "G1 Group C", "G2 Group A", "G2 Group B", "G2 Group C", "G3 Group A", "G3 Group B", "G3 Group C", "G3 Group D"
     ];
 
     const categoryBuckets = {};
