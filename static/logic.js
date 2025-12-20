@@ -358,7 +358,7 @@ function drawChart() {
     const groups = {};
     rows.forEach(r => {
       let key;
-      if (["MS", "HS", "ES", "EY", "MS/HS"].includes(r.category)) {
+      if (["MS", "HS", "ES", "EY", "MS/HS", "Group 1", "Group 2", "Group 3", "Group 4"].includes(r.category)) {
         // Middle/High/Elementary/Early Years — show category directly, no "Category"
         key = `${r.category} ${r.gender} ${r.eventName}`;
       } else if (r.category === "All House") {
