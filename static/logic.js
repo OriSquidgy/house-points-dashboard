@@ -11,6 +11,7 @@ const DATA = window.DATA || {
   links: {}
 };
 
+const isMobile = window.matchMedia("(pointer: coarse)").matches;
 Chart.register(ChartDataLabels);
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -76,7 +77,7 @@ const yAxisIconPlugin = {
     ctx.save();
 
     const targetH = 50;      // icon height (try 22–30)
-    const gap = 100;          // space between icon and the plot area
+    const gap = isMobile ? 10 : 100;          // space between icon and the plot area
 
     y.ticks.forEach((tick, i) => {
       const label = String(tick.label).trim();
@@ -103,7 +104,6 @@ function drawChart() {
   if (!canvas) { console.error('Canvas not found'); return; }
   const ctx = canvas.getContext('2d');
   if (!ctx) { console.error('2D context not available'); return; }
-  const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
   // destroy previous instance if present
   if (window._houseChart && typeof window._houseChart.destroy === 'function') {
@@ -242,7 +242,7 @@ function drawChart() {
       animation: false,
       layout: {
         padding: {
-          left: isMobile ? 10 : 90,
+          left: isMobile ? 80 : 90,
           right: isMobile ? 18 : 96,
           top: 12,
           bottom: 12
@@ -271,7 +271,7 @@ function drawChart() {
 
         y: {
           stacked: true,
-          ticks: { font: { size: isMobile ? 16 : 20, weight: '700' }, color: '#6b6b6b', padding: isMobile ? 6 : 12 },
+          ticks: { display: isMobile ? false : true, font: { size: isMobile ? 16 : 20, weight: '700' }, color: '#6b6b6b', padding: isMobile ? 6 : 12 },
           grid: { display: false }
         }
       },

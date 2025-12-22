@@ -673,7 +673,7 @@ window.EVENTS ={
         "4th",
         "4th",
         "1st",
-        "3rd",
+        "2nd",
         "3rd",
         "2nd"
     ],
